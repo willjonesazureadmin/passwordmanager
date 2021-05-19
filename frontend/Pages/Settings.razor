@@ -1,0 +1,8 @@
+@page "/Settings"
+@inject keyvault.web.models.AppSettings.LocalConfigurations settings
+
+
+<div class="container">
+    <h1>Application Settings</h1>
+    <h3>Current Keyvault: @settings.Keyvault.KeyvaultUrl</h3>
+</div>

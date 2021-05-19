@@ -1,0 +1,105 @@
+﻿@page "/"
+@using web.models.secrets
+<div class="container">
+    <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Secrets</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>View your stored secrets</li>
+                    <li></li>
+                </ul>
+
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="/secrets" class="btn btn-lg btn-block btn-outline-primary" role="button">View Secrets
+                </NavLink>
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Add Secret</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>Add new secret</li>
+                    <li></li>
+                </ul>
+
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="/secrets/add" class="btn btn-lg btn-block btn-outline-primary" role="button">Add Secret
+                </NavLink>
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">About</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>Learn about this app</li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="/about" class="btn btn-lg btn-block btn-outline-primary" role="button">About
+                </NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Frontend</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>Learn about the frontend app</li>
+                    <li>Frontend Build Status: <img
+                            src=https://github.com/willjonesazureadmin/password-manager-frontend/actions/workflows/deploy-production.yml/badge.svg>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="https://github.com/willjonesazureadmin/password-manager-frontend/"
+                    class="btn btn-lg btn-block btn-outline-primary" role="button">Frontend on Github</NavLink>
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Backend</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>Learn about the backend app</li>
+                    <li>Production Build Status: <img
+                            src=https://github.com/willjonesazureadmin/password-manager-backend/actions/workflows/deploy-production.yml/badge.svg>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="https://github.com/willjonesazureadmin/password-manager-backend/"
+                    class="btn btn-lg btn-block btn-outline-primary" role="button">Backend on Github</NavLink>
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">My Github</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>View my repos</li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+                <NavLink href="https://github.com/willjonesazureadmin/" class="btn btn-lg btn-block btn-outline-primary"
+                    role="button">My Github</NavLink>
+            </div>
+        </div>
+    </div>
+</div>

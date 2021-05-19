@@ -1,0 +1,37 @@
+@page "/health"
+@inject keyvault.web.models.AppSettings.LocalConfigurations settings;
+@inject IHttpClientFactory ClientFactory
+
+
+<div class="container">
+    <h1>Backend Health Status</h1>
+    <p>Querying backend API for applicaiton health status</p>
+    @if (healthState != "")
+    {
+        <div class="form-group">
+            <textarea style="height:100%;" class="form-control" rows="20">@healthState</textarea>
+        </div>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public Notification notification { get; set; }
+
+    public string healthState = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient(String.Format("{0}.NoAuthenticationClient", settings.Keyvault.APIBaseUrl));
+
+        var dataRequest = await client.GetAsync(String.Format("{0}/health", settings.Keyvault.APIBaseUrl));
+        if (dataRequest.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            healthState = await dataRequest.Content.ReadFromJsonAsync<string>();
+        }
+        if (dataRequest.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)
+        {
+            healthState = await dataRequest.Content.ReadAsStringAsync();
+        }
+    }
+
+}

@@ -1,6 +1,6 @@
-# Password Manager Frontend - Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/password-manager-frontend/actions/workflows/deploy-production.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/password-manager-frontend/actions/workflows/arm-ttk.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/password-manager-frontend/actions/workflows/dotnet-build.yml/badge.svg)
+# Password Manager Backend - Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/password-manager-backend/actions/workflows/deploy-production.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/password-manager-backend/actions/workflows/arm-ttk.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/password-manager-backend/actions/workflows/dotnet-build.yml/badge.svg)
 
-Password Manager Frontend is part of *(passman)* built to store and retrieve passwords securely from an Azure Keyvault...your own personal password manager. 
+Password Manager Backend is part of *(passman)* built to store and retrieve passwords securely from an Azure Keyvault...your own personal password manager. 
 
 ![Passman Architecture](/docs/images/passman-architecture.png)
 ## Table of Conents
@@ -9,8 +9,7 @@ Password Manager Frontend is part of *(passman)* built to store and retrieve pas
 * [Architecture](/docs/architecture/readme.md)
 * [Pipelines](/docs/pipelines/readme.md)
 * [Setup Guides]
-* [Frontend](https://github.com/willjonesazureadmin/passwordmanager/frontend/readme.md)
-* [Backend](https://github.com/willjonesazureadmin/passwordmanager/backend/readme.md)
+* [Frontend]
 
 ## Goal of passman 
 The goal of passman is to develop my C# OOP with real world applicable use cases, whilst learning and demonstrating the capabilities of Azure services. passman demonstrates the following capabitlies:

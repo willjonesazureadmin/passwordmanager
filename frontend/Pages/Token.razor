@@ -1,0 +1,52 @@
+@page "/Token"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@using web
+@inject Microsoft.AspNetCore.Components.WebAssembly.Authentication.IAccessTokenProvider tokenProvider
+
+
+
+@attribute [Authorize]
+<div class="container">
+  <h1>Azure AD JWT Token viewer</h1>
+  <p>Below is the access token with the default scope requested at login time</p> 
+
+<div class="form-group">
+  <label for="usr">Default JWT:</label>
+<textarea style="height:100%;" class="form-control" rows="12">@TokenRaw</textarea>
+
+                <NavLink href="https://jwt.ms" class="btn btn-lg btn-block btn-outline-primary" role="button">Decode token at JWT.MS
+                </NavLink>
+                  <p>This token can be decoded at JWT.ms to view the contents</p>       
+
+</div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public Notification notification { get; set; }
+
+    public string TokenRaw;
+
+    private AccessToken token;
+    protected override async Task OnInitializedAsync()
+    {
+        notification.DisplayLoading();
+        try
+        {
+           var b = await tokenProvider.RequestAccessToken();
+            b.TryGetToken(out token);
+            TokenRaw = token.Value;
+        }
+        catch (Exception ex)
+        {
+            notification.ProcessError(ex);
+        }
+        finally
+        {
+            notification.HideLoading();
+        }
+    }
+}

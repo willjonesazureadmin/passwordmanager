@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "backendName": {
+            "value": "awa-weu-pmp-be-001"
+        },
+        "backendHostingPlanName": {
+            "value": "asp-weu-pmp-001"
+        },
+        "backendAlwaysOn": {
+            "value": false
+        },
+        "backendSku": {
+            "value": "Standard"
+        },
+        "backendSkuCode": {
+            "value": "S1"
+        },
+        "backendWorkerSize": {
+            "value": "0"
+        },
+        "backendWorkerSizeId": {
+            "value": "0"
+        },
+        "backendNumberOfWorkers": {
+            "value": "1"
+        },
+        "backendCurrentStack": {
+            "value": "dotnetcore"
+        },
+        "backendEnvironments" : {
+            "value": [
+                {
+                    "name" : "staging",
+                    "buildVersion" : ""
+                }
+            ]
+        },
+        "frontendName": {
+            "value": "swa-pmp-fe-001"
+          },
+          "frontendSku": {
+            "value": "Free"
+          },
+          "frontendSkuCode": {
+            "value": "Free"
+          },
+          "frontendRepositoryUrl": {
+            "value": "https://github.com/willjonesazureadmin/password-manager-frontend"
+          },
+          "frontendBranch": {
+            "value": "main"
+          },
+          "frontendRepositoryToken": {
+            "value": ""
+          },
+          "frontendAppLocation": {
+            "value": "/frontend"
+          },
+          "frontendApiLocation": {
+            "value": ""
+          },
+          "frontendAppArtifactLocation": {
+            "value": "wwwroot"
+          },
+          "customDnsZone": {
+            "value": "azureadmin.co.uk"
+          },
+          "frontendCustomDnsName" : {
+              "value": "passman"
+          },
+          "dnsZoneSubscription": {
+            "value": "484147e9-d24d-41b4-86a8-50819355deb7"
+          },
+          "dnsZoneResourceGroup": {
+            "value": "ss-dns-rg"
+          },
+          "keyVaultName": {
+              "value": "azureadminpassmankv"
+          }
+    }
+}

@@ -9,8 +9,7 @@ Password Manager Frontend is part of *(passman)* built to store and retrieve pas
 * [Architecture](/docs/architecture/readme.md)
 * [Pipelines](/docs/pipelines/readme.md)
 * [Setup Guides]
-* [Frontend](https://github.com/willjonesazureadmin/passwordmanager/frontend/readme.md)
-* [Backend](https://github.com/willjonesazureadmin/passwordmanager/backend/readme.md)
+* [Backend](https://github.com/willjonesazureadmin/password-manager-backend)
 
 ## Goal of passman 
 The goal of passman is to develop my C# OOP with real world applicable use cases, whilst learning and demonstrating the capabilities of Azure services. passman demonstrates the following capabitlies:
