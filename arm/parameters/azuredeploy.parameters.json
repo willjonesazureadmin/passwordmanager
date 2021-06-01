@@ -29,14 +29,6 @@
         "backendCurrentStack": {
             "value": "dotnetcore"
         },
-        "backendEnvironments" : {
-            "value": [
-                {
-                    "name" : "staging",
-                    "buildVersion" : ""
-                }
-            ]
-        },
         "frontendName": {
             "value": "swa-pmp-fe-001"
           },

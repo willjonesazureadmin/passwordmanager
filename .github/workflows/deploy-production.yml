@@ -1,5 +1,5 @@
 
-name: Frontend Infrastructure Deployment
+name: Infrastructure and Application Deployment
 
 
 on:
@@ -11,6 +11,9 @@ jobs:
   INFRASTRUCTURE-DEPLOY:
     environment: Production
     runs-on: ubuntu-latest
+    outputs:
+      appName: ${{ steps.deploy-arm.outputs.appName }}
+      hostName: ${{ steps.deploy-arm.outputs.hostname }}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -84,60 +87,17 @@ jobs:
         enable-AzPSSession: true
 
     # Deploy application to web app
-    - name: Deploy to Azure Web App
+    - name: Deploy Backend to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
         app-name: '${{NEEDS.INFRASTRUCTURE-DEPLOY.OUTPUTS.appName}}'
-        slot-name: '${{NEEDS.INFRASTRUCTURE-DEPLOY.OUTPUTS.deploymentSlotName}}'
         package: .
           
     - name: Configure App Settings 
       uses: azure/appservice-settings@v1
       with:
         app-name: '${{NEEDS.INFRASTRUCTURE-DEPLOY.OUTPUTS.appName}}'
-        slot-name: '${{NEEDS.INFRASTRUCTURE-DEPLOY.OUTPUTS.deploymentSlotName}}'  
         app-settings-json: '${{ secrets.APP_SETTINGS }}' 
         
-  HEALTH-CHECK:
-      environment: Production
-      runs-on: ubuntu-latest
 
-    #Previous jobs must pass before this job runs
-      needs: [ APPLICATION-DEPLOY, DOTNET-BUILD, INFRASTRUCTURE-DEPLOY ]
-
-      steps:
-      - name: HTTP Health Check
-        uses: cygnetdigital/wait_for_response@v2.0.0
-        with:
-          # URL to poll takes output from ARM deployment step for URL of staging slot
-          url: https://${{NEEDS.INFRASTRUCTURE-DEPLOY.OUTPUTS.deploymentSlotHostName}}/health
-
-  SWAP-SLOTS:
-      environment: Production
-      runs-on: ubuntu-18.04
-
-    #Previous jobs must pass before this job runs
-      needs: [ HEALTH-CHECK ]
-
-      steps:
-      - uses: actions/checkout@v2
-      - name: Login via Az module
-        uses: azure/login@v1
-        with:
-          creds: ${{secrets.AZURE_CREDENTIALS}}
-          enable-AzPSSession: true
-      
-    #Replace the build version parameter in slotswap arm template deployment to this run id to allow the swap to go ahead
-      - name: Find and Replace build Version
-        run: find ./arm/parameters/slotswap.parameters.json -type f -exec sed -i ''s/#{buildVersion}#/${{ github.RUN_ID }}/g'' {} \;
-       
-      #Deploy Slot Swap
-      - name: Deploy Azure Resource Manager (ARM) Template
-        uses: Azure/arm-deploy@v1
-        with:
-          scope: resourcegroup
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./arm/templates/slotswap.json
-          parameters: ./arm/parameters/slotswap.parameters.json
