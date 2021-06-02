@@ -35,7 +35,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./arm/templates/azuredeploy.json
-          parameters: ./arm/parameters/azuredeploy.parameters.json repositoryToken=${{ secrets.AZURE_GITHUB_TOKEN}}
+          parameters: ./arm/parameters/azuredeploy.parameters.json frontendRepositoryToken=${{ secrets.AZURE_GITHUB_TOKEN}}
           
   DOTNET-BUILD:
   #Environment protection rules for production apply
@@ -52,17 +52,17 @@ jobs:
         dotnet-version: '5.0.x'
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build ./backend -c Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/backend
+      run: dotnet publish ./backend -c Release -o ${{env.DOTNET_ROOT}}/backendapp
 
   #Publish binaries as a build artifact
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
        name: passman-backend
-       path: ${{env.DOTNET_ROOT}}/backend
+       path: ${{env.DOTNET_ROOT}}/backendapp
 
 
   APPLICATION-DEPLOY:
