@@ -35,7 +35,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./arm/templates/azuredeploy.json
-          parameters: ./arm/parameters/azuredeploy.parameters.json frontendRepositoryToken=${{ secrets.AZURE_GITHUB_TOKEN}}
+          parameters: ./arm/parameters/azuredeploy.parameters.json frontendRepositoryToken=${{ secrets.AZURE_GITHUB_TOKEN }}
           
   DOTNET-BUILD:
   #Environment protection rules for production apply
