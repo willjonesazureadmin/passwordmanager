@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       appName: ${{ steps.deploy-arm.outputs.appName }}
-      hostName: ${{ steps.deploy-arm.outputs.hostname }}
+      hostName: ${{ steps.deploy-arm.outputs.hostName }}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -28,7 +28,7 @@ jobs:
 
       #Deploy Initial Architecture resources 
       - name: Deploy ARM Template
-        uses: Azure/arm-deploy@v1
+      - uses: azure/arm-deploy@main
         id: deploy-arm
         with:
           scope: resourcegroup

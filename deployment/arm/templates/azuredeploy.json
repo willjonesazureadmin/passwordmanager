@@ -202,7 +202,7 @@
                         }
                     ],
                     "outputs": {
-                        "hostname": {
+                        "hostName": {
                             "type": "string",
                             "value": "[reference(resourceId('Microsoft.Web/sites', parameters('backendName')), '2018-02-01').defaultHostName]"
                         },
@@ -461,7 +461,7 @@
     "outputs": {
         "hostname": {
             "type": "string",
-            "value": "[reference('BackendApp').outputs['hostname'].value]"
+            "value": "[reference('BackendApp').outputs['hostName'].value]"
         },
         "appName": {
             "type": "string",
