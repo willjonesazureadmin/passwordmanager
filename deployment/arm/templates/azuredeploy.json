@@ -250,7 +250,7 @@
                                 "accessPolicies": [
                                 ],
                                 "sku": {
-                                    "name":  "standard",
+                                    "name": "standard",
                                     "family": "A"
                                 },
                                 "networkAcls": {
@@ -457,5 +457,15 @@
             }
         }
 
-    ]
+    ],
+    "outputs": {
+        "hostname": {
+            "type": "string",
+            "value": "[reference('BackendApp').outputs['hostname'].value]"
+        },
+        "appName": {
+            "type": "string",
+            "value": "[reference('BackendApp').outputs['appName'].value]"
+        }
+    }
 }
