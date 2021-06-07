@@ -198,22 +198,6 @@
                                 },
                                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('backendHostingPlanName'))]",
                                 "clientAffinityEnabled": true
-                            },
-                            "identity": {
-                                "type": "SystemAssigned"
-                            }
-                        },
-                        {
-                            "type": "Microsoft.Authorization/roleAssignments",
-                            "name": "[guid(resourceGroup().id, 'appIdentity')]",
-                            "apiVersion": "2018-09-01-preview",
-                            "dependsOn": [
-                                "[concat('Microsoft.Web/sites/', parameters('backendName'))]"
-                            ],
-                            "properties": {
-                                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                                "principalId": "[reference(resourceId('Microsoft.Web/sites', parameters('backendName')), '2018-11-01','full').identity.principalId]",
-                                "scope": "[resourceGroup().Id]"
                             }
                         }
                     ],
@@ -225,10 +209,6 @@
                         "appName": {
                             "type": "string",
                             "value": "[parameters('backendName')]"
-                        },
-                        "identity": {
-                            "type": "string",
-                            "value": "[reference(resourceId('Microsoft.Web/sites', parameters('backendName')), '2018-11-01','full').identity.principalId]"
                         }
                     }
                 }
