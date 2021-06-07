@@ -1,4 +1,4 @@
-# Password Manager Frontend - Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) 
+# Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) 
 
 Password Manager Frontend is part of *(passman)* built to store and retrieve passwords securely from an Azure Keyvault...your own personal password manager. 
 
