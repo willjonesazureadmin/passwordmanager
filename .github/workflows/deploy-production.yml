@@ -28,7 +28,7 @@ jobs:
 
       #Deploy Initial Architecture resources 
       - name: Deploy ARM Template
-      - uses: azure/arm-deploy@main
+        uses: azure/arm-deploy@main
         id: deploy-arm
         with:
           scope: resourcegroup
