@@ -12,10 +12,10 @@
             "value": false
         },
         "backendSku": {
-            "value": "Standard"
+            "value": "Shared"
         },
         "backendSkuCode": {
-            "value": "S1"
+            "value": "D1"
         },
         "backendWorkerSize": {
             "value": "0"

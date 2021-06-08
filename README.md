@@ -5,12 +5,12 @@ Password Manager *(passman)* built to store and retrieve passwords securely from
 ![Passman Architecture](/docs/images/passman-architecture.png)
 ## Table of Conents
 
-* [General Info](https://passman.azurewebsites.net)
+* [Application](https://passman.azurewebsites.net)
 * [Architecture](/docs/architecture/readme.md)
 * [Pipelines](/docs/pipelines/readme.md)
-* [Setup Guides]
-* [Frontend](https://github.com/willjonesazureadmin/passwordmanager/frontend/readme.md)
-* [Backend](https://github.com/willjonesazureadmin/passwordmanager/backend/readme.md)
+* [Setup Guides](/docs/setup/readme.md)
+* [Frontend](/frontend/readme.md)
+* [Backend](/backend/readme.md)
 
 ## Goal of passman 
 The goal of passman is to develop my C# OOP with real world applicable use cases, whilst learning and demonstrating the capabilities of Azure services. passman demonstrates the following capabitlies:
