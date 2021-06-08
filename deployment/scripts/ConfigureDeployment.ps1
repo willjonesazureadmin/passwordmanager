@@ -181,7 +181,7 @@ function CreateApp() {
     write-host "Creating a new application" -ForegroundColor Yellow
     $identifier = "api://" + $applicationName.replace(" ", "-") + "." + $tenantDomainName
     $application = New-AzADApplication -DisplayName $applicationName -IdentifierUris $identifier -InformationAction SilentlyContinue -WarningAction SilentlyContinue 
-    $servicePrincipal = New-AzADServicePrincipal -ApplicationId $application.ApplicationId -SkipAssignment
+    New-AzADServicePrincipal -ApplicationId $application.ApplicationId -SkipAssignment
     Start-Sleep -Seconds 5
     $app = (az ad app show --id $application.ApplicationId) | Convertfrom-Json
     Write-Host "Application Created" $applicationName "and ready for configuration Id" $app.appId -ForegroundColor Green
@@ -235,7 +235,7 @@ function AmendParameters() {
 function CreateAppSecret($application) {
     #Create secret for backend application
     Write-Host "Creating new secret for application" $application.ApplicationId -ForegroundColor Yellow
-    $backendPwd = -join ((65..90) + (97..122) | Get-Random -Count 10 | % {[char]$_})
+    $backendPwd = -join ((65..90) + (97..122) | Get-Random -Count 10 | ForEach-Object {[char]$_})
     $SecureStringPassword = ConvertTo-SecureString -String $backendPwd -AsPlainText -Force
     New-AzADAppCredential -ObjectId $application.ObjectId -Password $SecureStringPassword -EndDate (Get-Date).AddYears(99)
     Write-Host "Secret created" -ForegroundColor Green
@@ -279,7 +279,7 @@ Login-AzAccount
 ###Build additional variables from input parameters
 $frontendHostName = ($frontendCustomDnsName + "." + $customDnsZone)
 $backendHostName = ($backendApplicationName + ".azurewebsites.net")
-$frontendReplyUrl = "https://" + $frontendHostName + "/authenication/login-callback"
+$frontendReplyUrl = "https://" + $frontendHostName + "/authentication/login-callback"
 
 
 ###Create Azure ad app registrations and configure for both backend and frontend
@@ -291,7 +291,7 @@ if($frontendApplication -eq $null) { CreateApp -applicationName $frontendApplica
 if(($manifestConfig -eq $true) -or ($resetExistingApplications -eq $true))
 {
     $backendManifest = UploadManifest $backendApplication "backend" (ProcessManifest $samplesPath $backendApplication "backend" $frontendApplication)
-    $frontendManifest = UploadManifest $frontendApplication "frontend" (ProcessManifest $samplesPath $frontendApplication "frontend" $backendApplication $backendManifest $frontendReplyUrl)
+    UploadManifest $frontendApplication "frontend" (ProcessManifest $samplesPath $frontendApplication "frontend" $backendApplication $backendManifest $frontendReplyUrl)
 }
 
 
