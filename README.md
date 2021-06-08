@@ -23,7 +23,6 @@ The goal of passman is to develop my C# OOP with real world applicable use cases
 * .NET Core Web API
 * Github CI/CD deployment with ARM Templates
 
-Learn more about *passman* [Here](https://passman.azurewebsites.net)
 
 
 

@@ -2,13 +2,13 @@
 
 The fundamental goal of the password manager project is to quick store, update and retrieve secrets from a keyvault that is secured using the user's identity. As if they were looking at the keyvault through the Azure portal. To achieve this goal the password manager application is made of 4 core components.
 
-* Application Frontend 
+* [Application Frontend](#application-frontend)
 * Application Backend (Proxy)
 * Keyvault
 * Azure AD Applications 
 
 
-![Passman Architecture](/docs/images/passman-backend-architecture.png)
+![Passman Architecture](/docs/images/passman-architecture.png)
 
 The frontend application is designed to allow a user(s) to save and retrieve secrets stored in an Azure Keyvault utilsing their Azure AD identity. An application frontend cannot make calls directly to the keyvault due to CORS policies that cannot be changed on the keyvault. Therefore a middle-tier application must "proxy" the connection/identity/authorisation to the keyvault, in this case the applicaiton backend. 
 
