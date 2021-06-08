@@ -60,7 +60,7 @@
             "value": "azureadmin.co.uk"
         },
         "frontendCustomDnsName": {
-            "value": "passman-test"
+            "value": "passman"
         },
         "dnsZoneSubscription": {
             "value": "484147e9-d24d-41b4-86a8-50819355deb7"
@@ -69,7 +69,7 @@
             "value": "ss-dns-rg"
         },
         "keyVaultName": {
-            "value": "aapasmannkv"
+            "value": "azureadminpassmankv"
         }
     }
 }
