@@ -1,0 +1,1 @@
+[Now read about the backend application here](/docs/architecture/backend/readme.md)

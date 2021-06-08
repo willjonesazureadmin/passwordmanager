@@ -1,16 +1,20 @@
-# Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) 
+# Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/azure-static-web-apps-witty-bush-0efccd803.yml/badge.svg)
 
 Password Manager *(passman)* built to store and retrieve passwords securely from an Azure Keyvault...your own personal password manager. 
 
-![Passman Architecture](/docs/images/passman-architecture.png)
+![Passman Architecture](/docs/images/passman.png)
+
 ## Table of Conents
 
-* [Application](https://passman.azurewebsites.net)
+* [Goal of Passman - Start Here!](#goal-of-passman)
 * [Architecture](/docs/architecture/readme.md)
+* [Frontend](/docs/architecture/frontend/readme.md)
+* [Backend](/docs/architecture/backend/readme.md)
+* [Authentication](/docs/architecture/auth/readme.md)
+* [Repo](/docs/repo/readme.md)
 * [Pipelines](/docs/pipelines/readme.md)
 * [Setup Guides](/docs/setup/readme.md)
-* [Frontend](/frontend/readme.md)
-* [Backend](/backend/readme.md)
+* [Demo Application](https://passman.azureadmin.co.uk)
 
 ## Goal of passman 
 The goal of passman is to develop my C# OOP with real world applicable use cases, whilst learning and demonstrating the capabilities of Azure services. passman demonstrates the following capabitlies:
@@ -23,6 +27,7 @@ The goal of passman is to develop my C# OOP with real world applicable use cases
 * .NET Core Web API
 * Github CI/CD deployment with ARM Templates
 
+[Continue learning about passman here](/docs/architecture/readme.md) by reading about the architecture.
 
 
 

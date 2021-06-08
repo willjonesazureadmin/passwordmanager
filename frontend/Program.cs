@@ -48,7 +48,7 @@ namespace keyvault
             builder.Services.AddMsalAuthentication(options =>
             {
                 builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-                options.ProviderOptions.DefaultAccessTokenScopes.Add(string.Format("api://{0}/.default",builder.Configuration["Keyvault:APIApplicatonId"]));
+                options.ProviderOptions.DefaultAccessTokenScopes.Add(string.Format("{0}/.default",builder.Configuration["Keyvault:APIApplicatonId"]));
             });
             
             await builder.Build().RunAsync();
