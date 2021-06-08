@@ -14,6 +14,10 @@
     [Parameter(Mandatory = $false)]
     [string]
     $backendAppSettingsSecretSamplePath = "appsettingssecrets.json", 
+
+    [Parameter(Mandatory = $false)]
+    [string]
+    $parametersFileSamplePath = "azuredeploy.parameters.json", 
    
     [Parameter(Mandatory = $false)]
     [string]
@@ -21,7 +25,7 @@
 
     [Parameter(Mandatory = $false)]
     [string]
-    $repositoryUrl= "https://github.com/willjonesazureadmin/passwordmanager",
+    $repositoryUrl = "https://github.com/willjonesazureadmin/passwordmanager",
 
     [Parameter(Mandatory = $false)]
     [string]
@@ -57,7 +61,7 @@
 
     [Parameter(Mandatory = $false)]
     [string]
-    $frontendCustomDnsName = "passman-test",
+    $frontendCustomDnsName = "passman",
   
     [Parameter(Mandatory = $false)]
     [string]
@@ -65,17 +69,37 @@
   
     [Parameter(Mandatory = $false)]
     [string]
-    $githubServicePrincpalName = "sp-github-passman"
+    $githubServicePrincpalName = "sp-github-passman",
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetExistingApplications = $true,
+    
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetApplicationSecrets = $true,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetGitHubSecrets = $false,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $installAzModules = $false,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $loginToPSandCLI = $false
 )
 
 function LoadFile() {
- [CmdletBinding()]
- Param
- (
-     [Parameter(Mandatory = $true)]
-     [string]
-     $FilePath
- )
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $FilePath
+    )
     ###Load file content from local repo
     Write-Host "Loading file from $FilePath" -ForegroundColor Yellow
     $content = Get-Content -Path $FilePath 
@@ -110,20 +134,7 @@ function AmendManifestForFrontEnd($object, $knownApp, $knownManifest, $frontendR
 }
 
 
-function CreateApp($applicationName, $tenantDomainName) {
-    #Create Azure AD Application registrations for frontend and backend apps
 
-    Write-Host "Application does not exist" $applicationName -ForegroundColor Red
-    write-host "Creating a new application" -ForegroundColor Yellow
-    $identifier = "api://" + $applicationName.replace(" ", "-") + "." + $tenantDomainName
-    $application = New-AzADApplication -DisplayName $applicationName -IdentifierUris $identifier -InformationAction SilentlyContinue -WarningAction SilentlyContinue 
-    $servicePrincipal = New-AzADServicePrincipal -ApplicationId $application.ApplicationId -SkipAssignment
-    Start-Sleep -Seconds 5
-    $app = (az ad app show --id $application.ApplicationId) | Convertfrom-Json
-    Write-Host "Application Created" $applicationName "and ready for configuration Id" $app.appId -ForegroundColor Green
-    return $app
-
-}
 
 function ProcessManifest($filePath, $application, $appType, $knownApp, $updatedManifest, $frontendReplyUrl) {
     #Process the manifest files for applications
@@ -152,95 +163,134 @@ function UploadManifest($application, $appType, $content) {
     return $content | ConvertFrom-Json
 }
 
-function CreateAppSecret($application) {
-    #Create secret for backend application
-    Write-Host "Creating new secret for application" $application.ApplicationId -ForegroundColor Yellow
-    $backendPwd = -join ((65..90) + (97..122) | Get-Random -Count 10 | % {[char]$_})
-    $SecureStringPassword = ConvertTo-SecureString -String $backendPwd -AsPlainText -Force
-    New-AzADAppCredential -ObjectId $application.ObjectId -Password $SecureStringPassword -EndDate (Get-Date).AddYears(99)
-    Write-Host "Secret created" -ForegroundColor Green
-    return $backendPwd
+function CreateApp() {
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $applicationName,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $tenantDomainName
+    )
+
+    #Create Azure AD Application registrations for frontend and backend apps if they do not exist
+    Write-Host "Application does not exist" $applicationName -ForegroundColor Red
+    write-host "Creating a new application" -ForegroundColor Yellow
+    $identifier = "api://" + $applicationName.replace(" ", "-") + "." + $tenantDomainName
+    $application = New-AzADApplication -DisplayName $applicationName -IdentifierUris $identifier -InformationAction SilentlyContinue -WarningAction SilentlyContinue 
+    $servicePrincipal = New-AzADServicePrincipal -ApplicationId $application.ApplicationId -SkipAssignment
+    Start-Sleep -Seconds 5
+    $app = (az ad app show --id $application.ApplicationId) | Convertfrom-Json
+    Write-Host "Application Created" $applicationName "and ready for configuration Id" $app.appId -ForegroundColor Green
+    return $app
+
 }
 
-function CheckAppExists($applicationName) {
+function CheckAppExists() {
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $applicationName
+
+    )
     ###Check applications are already registered in Azure AD
     write-host "Checking app exists" $applicationName -ForegroundColor Yellow
     $application = Get-AzADApplication -DisplayName $applicationName
     if ($application -ne $null) {
+        Write-Host "Application already exists" -ForegroundColor Green
         $app = (az ad app show --id $application.ApplicationId) | ConvertFrom-Json
     }
  
     return $app
 }
 
-function CreateServicePrincipal($principalName, $subscriptionId1, $resourceGroup1, $subscriptionId2, $resourceGroup2)
-{
+function AmendParameters() {
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        [object]
+        $Parameters
+
+    )
+    ###Amend and return the paramters file
+    write-host "Amending local ARM Parameters files" -ForegroundColor Yellow
+    $Parameters.parameters.frontendName.value = $frontendApplicationName
+    $Parameters.parameters.customDnsZone.value = $customDnsZone
+    $Parameters.parameters.dnsZoneResourceGroup.value = $dnsZoneResourceGroup
+    $Parameters.parameters.dnsZoneSubscription.value = $dnsZoneSubscription
+    $Parameters.parameters.backendName.value = $backendApplicationName
+    $Parameters.parameters.frontendCustomDnsName.value = $frontendCustomDnsName
+    $Parameters.parameters.frontendRepositoryUrl.value = $repositoryUrl
+    $Parameters.parameters.keyVaultName.value = $keyvaultName
+ 
+    return $Parameters
+}
+
+function CreateAppSecret($application) {
+    #Create secret for backend application
+    Write-Host "Creating new secret for application" $application.ApplicationId -ForegroundColor Yellow
+    $backendPwd = -join ((65..90) + (97..122) | Get-Random -Count 10 | % { [char]$_ })
+    $SecureStringPassword = ConvertTo-SecureString -String $backendPwd -AsPlainText -Force
+    New-AzADAppCredential -ObjectId $application.ObjectId -Password $SecureStringPassword -EndDate (Get-Date).AddYears(99)
+    Write-Host "Secret created" -ForegroundColor Green
+    return $backendPwd
+}
+
+function CreateServicePrincipal($principalName, $subscriptionId1, $resourceGroup1, $subscriptionId2, $resourceGroup2) {
     #Create service Principal for Github and set permissions, if DNS zones are in a different subscription then add additional scope
     $scope1 = "/subscriptions/$subscriptionId1/resourcegroups/$resourceGroup1"
-    if($subscriptionId1 -ne $subscriptionId2)
-    {
+    if ($subscriptionId1 -ne $subscriptionId2) {
 
         $scope2 = "/subscriptions/$subscriptionId2/resourcegroups/$resourceGroup2"
 
     }
-    $servicePrincipalSecretDetails = az ad sp create-for-rbac --name "http://$principalName" --role contributor --scopes $scope1 $scope2 --sdk-auth
+    $servicePrincipalSecretDetails = Invoke-Command -ScriptBlock { az ad sp create-for-rbac --name "http://$principalName" --role contributor --scopes $scope1 $scope2 --sdk-auth } -WarningAction SilentlyContinue
     return $servicePrincipalSecretDetails
 }
 
 ### Error Action
 $ErrorActionPreference = "Continue"
 $WarningPreference = "Continue"
-Install-Module az -Scope CurrentUser -Force
+
+if ($installAzModules -eq $true) { Install-Module az -Scope CurrentUser -Force }
 
 ### Load parameter file sample from repo, amend parameters and output to correct repo location for pipeline###
-$configParameters = Loadfile -FilePath ($parametersFilePath ) -ErrorAction Stop| Convertfrom-Json
-$configParameters.parameters.frontendName.value = $frontendApplicationName
-$configParameters.parameters.customDnsZone.value = $customDnsZone
-$configParameters.parameters.dnsZoneResourceGroup.value = $dnsZoneResourceGroup
-$configParameters.parameters.dnsZoneSubscription.value = $dnsZoneSubscription
-$configParameters.parameters.backendName.value = $backendApplicationName
-$configParameters.parameters.frontendCustomDnsName.value = $frontendCustomDnsName
-$configParameters.parameters.frontendRepositoryUrl.value = $repositoryUrl
-$configParameters.parameters.keyVaultName.value = $keyvaultName
+$configParameters = Loadfile -FilePath ($samplesPath + $parametersFileSamplePath ) -ErrorAction Stop | Convertfrom-Json
+$configParameters = AmendParameters -Parameters $configParameters -ErrorAction Stop 
 ExportFile $parametersFilePath ($configParameters | ConvertTo-Json)
 
 
 ###Log into Azure Powershell and CLI###
-write-host "Logging in to AZ CLI and AZ Powershell....we need both"
-az login
-Login-AzAccount
-
-
-###Create Service Principal for deployment from github
-$servicePrincipalConfig = CreateServicePrincipal $githubServicePrincpalName $deploymentSubscriptionId $deploymentResourceGroup $dnsZoneSubscription $dnsZoneResourceGroup
+If ($loginToPSandCLI -eq $true) {
+    write-host "Logging in to AZ CLI and AZ Powershell....we need both"
+    az login
+    Login-AzAccount
+}
 
 
 ###Build additional variables from input parameters
 $frontendHostName = ($frontendCustomDnsName + "." + $customDnsZone)
-$backendHostName = ($backendHostName + ".azurewebsites.net")
+$backendHostName = ($backendApplicationName + ".azurewebsites.net")
 $frontendReplyUrl = "https://" + $frontendHostName + "/authenication/login-callback"
 
 
 ###Create Azure ad app registrations and configure for both backend and frontend
-$backendApplication = CreateApp $backendApplicationName $tenantDomainName $backendHostName 
-$frontendApplication = CreateApp $frontendApplicationName $tenantDomainName $frontendHostName $frontEndReplySuffix
-$backendManifest = UploadManifest $backendApplication "backend" (ProcessManifest $samplesPath $backendApplication "backend" $frontendApplication)
-$frontendManifest = UploadManifest $frontendApplication "frontend" (ProcessManifest $samplesPath $frontendApplication "frontend" $backendApplication $backendManifest $frontendReplyUrl)
+$backendApplication = CheckAppExists -applicationName $backendApplicationName
+if ($backendApplication -eq $null) { CreateApp -applicationName $backendApplicationName -tenantDomainName $tenantDomainName; $manifestConfig = $true; $resetApplicationSecrets = $true }
+$frontendApplication = CheckAppExists -applicationName $frontendApplicationName
+if ($frontendApplication -eq $null) { CreateApp -applicationName $frontendApplicationName -tenantDomainName $tenantDomainName; $manifestConfig = $true }
 
-###Generate Backend Secret Password
-$backendSecret = CreateAppSecret $backendApplication
+if (($manifestConfig -eq $true) -or ($resetExistingApplications -eq $true)) {
+    $backendManifest = UploadManifest $backendApplication "backend" (ProcessManifest $samplesPath $backendApplication "backend" $frontendApplication)
+    $frontendManifest = UploadManifest $frontendApplication "frontend" (ProcessManifest $samplesPath $frontendApplication "frontend" $backendApplication $backendManifest $frontendReplyUrl)
+}
 
-
-###Create configuration items that you must save as secrets to github
-write-host "Preparing Secret Values" -ForegroundColor yellow
-write-host "Secret Values for Backend App being created" -ForegroundColor yellow
-$backendAppSettingsSecret = LoadFile($samplesPath + $backendAppSettingsSecretSamplePath) | ConvertFrom-Json
-$backendAppSettingsSecret[0].value = (Get-AzContext).Tenant.Id
-$backendAppSettingsSecret[2].value = $tenantDomainName  
-$backendAppSettingsSecret[3].value = $backendSecret[1]
-$backendAppSettingsSecret[4].value = $backendApplication.appId
-$backendAppSettingsSecret[6].value = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
-$backendAppSettingsSecret[8].value = $frontendHostName
 
 ###Update the frontend application settings file, this is not secret so write back to the repo
 write-host "Preparing Public App Settings Values" -ForegroundColor yellow
@@ -251,16 +301,34 @@ $frontendAppSettings.keyvault.APIApplicatonId = $backendApplication.appId
 $frontendAppSettings.keyvault.KeyvaultUrl = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
 ExportFile $frontEndAppSettingsPath ($frontendAppSettings | ConvertTo-Json)
 
-
-
 ###Output to screen the secrets that need to be saved to GitHub
-write-host "Store this secret as APP_SETTINGS:" -ForegroundColor red
-$backendAppSettingsSecret | ConvertTo-Json
-
-write-host "Store this secret as AZURE_CREDENTIALS:" -ForegroundColor red
-$servicePrincipalConfig 
+if ($resetApplicationSecrets -eq $true) {
+    ###Generate Backend Secret Password
+    $backendSecret = CreateAppSecret $backendApplication
 
     
+    ###Create configuration items that you must save as secrets to github
+    write-host "Preparing Secret Values" -ForegroundColor yellow
+    write-host "Secret Values for Backend App being created" -ForegroundColor yellow
+    $backendAppSettingsSecret = LoadFile($samplesPath + $backendAppSettingsSecretSamplePath) | ConvertFrom-Json
+    $backendAppSettingsSecret[0].value = (Get-AzContext).Tenant.Id
+    $backendAppSettingsSecret[2].value = $tenantDomainName  
+    $backendAppSettingsSecret[3].value = $backendSecret[1]
+    $backendAppSettingsSecret[4].value = $backendApplication.appId
+    $backendAppSettingsSecret[6].value = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
+    $backendAppSettingsSecret[8].value = $frontendHostName
+
+    write-host "Store this secret as APP_SETTINGS:" -ForegroundColor red
+    $backendAppSettingsSecret | ConvertTo-Json
+}
+
+if ($resetGitHubSecrets -eq $true) {
+    ###Create Service Principal for deployment from github
+    $servicePrincipalConfig = CreateServicePrincipal $githubServicePrincpalName $deploymentSubscriptionId $deploymentResourceGroup $dnsZoneSubscription $dnsZoneResourceGroup
+    write-host "Store this secret as AZURE_CREDENTIALS:" -ForegroundColor red
+    $servicePrincipalConfig 
+}  
+
 write-host "Store this secret as AZURE_RG:" -ForegroundColor red
 $deploymentResourceGroup
 
