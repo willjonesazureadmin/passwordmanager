@@ -300,7 +300,7 @@ write-host "Preparing Public App Settings Values" -ForegroundColor yellow
 $frontendAppSettings = LoadFile($samplesPath + $frontEndAppSettingsSamplePath) | ConvertFrom-Json
 $frontendAppSettings.AzureAd.Authority = $frontendAppSettings.AzureAd.Authority + $tenantDomainName
 $frontendAppSettings.AzureAd.ClientId = $frontendApplication.appId
-$frontendAppSettings.keyvault.APIBaseUrl = $backendHostName
+$frontendAppSettings.keyvault.APIBaseUrl = ("https://" + $backendHostName )
 $frontendAppSettings.keyvault.APIApplicatonId = $backendApplication.identifierUris[0]
 $frontendAppSettings.keyvault.KeyvaultUrl = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
 ExportFile $frontEndAppSettingsPath ($frontendAppSettings | ConvertTo-Json)

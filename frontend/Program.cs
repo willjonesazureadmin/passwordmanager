@@ -21,7 +21,7 @@ namespace keyvault
             builder.Services.AddSingleton<SecretService>();
             builder.Services.AddScoped<KeyvaultAPIAuthorizationMessageHandler>();
             builder.Services.AddHttpClient(builder.Configuration["Keyvault:ApiClientName"], 
-                client => client.BaseAddress = new Uri(String.Format("https://{0}",builder.Configuration["Keyvault:APIBaseUrl"]))
+                client => client.BaseAddress = new Uri(builder.Configuration["Keyvault:APIBaseUrl"]))
                     .AddHttpMessageHandler<KeyvaultAPIAuthorizationMessageHandler>();
             builder.Services.AddHttpClient(string.Format("{0}.NoAuthenticationClient",builder.Configuration["Keyvault:ApiClientName"]), 
                 client => client.BaseAddress = new Uri(string.Format("{0)/health",builder.Configuration["Keyvault:APIBaseUrl"])));
