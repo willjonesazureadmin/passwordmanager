@@ -245,17 +245,14 @@ function CreateAppSecret($application) {
 function CreateServicePrincipal($principalName, $subscriptionId1, $resourceGroup1, $subscriptionId2, $resourceGroup2)
 {
     #Create service Principal for Github and set permissions, if DNS zones are in a different subscription then add additional scope
-    $scope1cont = "/subscriptions/$subscriptionId1/resourcegroups/$resourceGroup1"
-    $scope1read = "/subscriptions/$subscriptionId1"
+    $scope1 = "/subscriptions/$subscriptionId1/resourcegroups/$resourceGroup1"
     if($subscriptionId1 -ne $subscriptionId2)
     {
 
-        $scope2cont = "/subscriptions/$subscriptionId2/resourcegroups/$resourceGroup2"
+        $scope2 = "/subscriptions/$subscriptionId2/resourcegroups/$resourceGroup2"
 
     }
-    $servicePrincipalSecretDetails = Invoke-Command -ScriptBlock {az ad sp create-for-rbac --name "http://$principalName" --role contributor --scopes $scope1cont $scope2cont --sdk-auth} -WarningAction SilentlyContinue
-    $servicePrincipalSecretDetails = Invoke-Command -ScriptBlock {az ad sp create-for-rbac --name "http://$principalName" --role reader --scopes $scope1read --sdk-auth} -WarningAction SilentlyContinue
-    
+    $servicePrincipalSecretDetails = Invoke-Command -ScriptBlock {az ad sp create-for-rbac --name "http://$principalName" --role contributor --scopes $scope1 $scope2 --sdk-auth} -WarningAction SilentlyContinue
     return $servicePrincipalSecretDetails
 }
 
@@ -304,7 +301,7 @@ $frontendAppSettings = LoadFile($samplesPath + $frontEndAppSettingsSamplePath) |
 $frontendAppSettings.AzureAd.Authority = $frontendAppSettings.AzureAd.Authority + $tenantDomainName
 $frontendAppSettings.AzureAd.ClientId = $frontendApplication.appId
 $frontendAppSettings.keyvault.APIBaseUrl = $backendHostName
-$frontendAppSettings.keyvault.APIApplicatonId = $backendApplication.appId
+$frontendAppSettings.keyvault.APIApplicatonId = $backendApplication.identifierUris[0]
 $frontendAppSettings.keyvault.KeyvaultUrl = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
 ExportFile $frontEndAppSettingsPath ($frontendAppSettings | ConvertTo-Json)
 

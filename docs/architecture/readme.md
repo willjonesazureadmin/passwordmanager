@@ -3,9 +3,9 @@
 The fundamental goal of the password manager project is to quick store, update and retrieve secrets from a keyvault that is secured using the user's identity. As if they were looking at the keyvault through the Azure portal. To achieve this goal the password manager application is made of 4 core components.
 
 * [Application Frontend](#application-frontend)
-* Application Backend (Proxy)
-* Keyvault
-* Azure AD Applications 
+* [Application Backend (Proxy)](#Application-Backend-proxy)
+* [Keyvault](#keyvault)
+* [Azure AD Applications](#Azure-ad-applications)
 
 
 ![Passman Architecture](/docs/images/passman-architecture.png)
@@ -27,17 +27,6 @@ An Azure Keyvault is configured with permissions to allow an application and a u
 
 ### Azure AD Applications
 The Azure AD Applications are key to allow secure authenticated and proper authorised access to the secrets within the Azure keyvault. Two applications are registered, the frontend application and the backend application. 
-
-A user must consent to both applications to perform the relvant authentication and authorisation flow to the keyvault. The permissions required are:
-
-|Application | Permission  | Perission Name |
---- | --- | ---
-|Frontend|Sign in User| Graph - User.Read |
-|Frontend|Access Backend App| Backend App - user_impersonation |
-|Backend|Access Keyvault| Azure KeyVault - user_impersonation |
-|Backend| Sign In User | Graph - User.Read |
-
-As the backend application does not sign in users interactively consent must be gained from the user when they sign into the frontend application. To do this the backend application is configured with a "knownClientId" which is the application Id of the front end application. This means that when a user signs in for the first time they are presented with a consent page for all the applicaitons in the stack. 
 
 This allows for "on-behalf-of flow" to work correctly. More details can be found [here](/docs/auth/readme/md)
 
