@@ -31,45 +31,45 @@
         },
         "frontendName": {
             "value": "swa-pmp-fe-001"
-          },
-          "frontendSku": {
+        },
+        "frontendSku": {
             "value": "Free"
-          },
-          "frontendSkuCode": {
+        },
+        "frontendSkuCode": {
             "value": "Free"
-          },
-          "frontendRepositoryUrl": {
-            "value": "https://github.com/willjonesazureadmin/password-manager-frontend"
-          },
-          "frontendBranch": {
+        },
+        "frontendRepositoryUrl": {
+            "value": "https://github.com/willjonesazureadmin/passwordmanager"
+        },
+        "frontendBranch": {
             "value": "main"
-          },
-          "frontendRepositoryToken": {
+        },
+        "frontendRepositoryToken": {
             "value": ""
-          },
-          "frontendAppLocation": {
+        },
+        "frontendAppLocation": {
             "value": "/frontend"
-          },
-          "frontendApiLocation": {
+        },
+        "frontendApiLocation": {
             "value": ""
-          },
-          "frontendAppArtifactLocation": {
+        },
+        "frontendAppArtifactLocation": {
             "value": "wwwroot"
-          },
-          "customDnsZone": {
+        },
+        "customDnsZone": {
             "value": "azureadmin.co.uk"
-          },
-          "frontendCustomDnsName" : {
-              "value": "passman"
-          },
-          "dnsZoneSubscription": {
+        },
+        "frontendCustomDnsName": {
+            "value": "passman-test"
+        },
+        "dnsZoneSubscription": {
             "value": "484147e9-d24d-41b4-86a8-50819355deb7"
-          },
-          "dnsZoneResourceGroup": {
+        },
+        "dnsZoneResourceGroup": {
             "value": "ss-dns-rg"
-          },
-          "keyVaultName": {
-              "value": "azureadminpassmankv"
-          }
+        },
+        "keyVaultName": {
+            "value": "aapasmannkv"
+        }
     }
 }
