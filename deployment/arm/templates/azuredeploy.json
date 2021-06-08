@@ -374,8 +374,8 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
-            "name": "Dns",
+            "apiVersion": "2020-10-01",
+            "name": "AzureDns",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments','FrontendApp')]"
             ],
@@ -448,9 +448,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "UpdaeApp",
+            "name": "UpdateApp",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments','Dns')]"
+                "[resourceId(parameters('dnsZoneSubscription'),parameters('dnsZoneResourceGroup'),'Microsoft.Resources/deployments','AzureDns')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -491,10 +491,8 @@
                             "apiVersion": "2020-12-01",
                             "name": "[concat(parameters('frontendName'),'/', parameters('frontendCustomDnsName'),'.',parameters('customDnsZone'))]",
                             "dependsOn": [
-
                             ],
                             "properties": {
-
                             }
                         }
                     ],
