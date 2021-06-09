@@ -13,6 +13,6 @@ public class KeyvaultAPIAuthorizationMessageHandler : AuthorizationMessageHandle
         this._Config = configuration;
         ConfigureHandler(
             authorizedUrls: new[] { _Config["Keyvault:APIBaseUrl"] },
-            scopes: new[] { string.Format("api://{0}/{1}",_Config["Keyvault:APIApplicatonId"],_Config["Keyvault:ApiScope"]) });
+            scopes: new[] { string.Format("{0}/{1}",_Config["Keyvault:APIApplicatonId"],_Config["Keyvault:ApiScope"]) });
     }
 }
