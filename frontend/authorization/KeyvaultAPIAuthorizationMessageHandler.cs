@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.Extensions.Configuration;
+using static keyvault.web.models.AppSettings;
 
 public class KeyvaultAPIAuthorizationMessageHandler : AuthorizationMessageHandler
 {
-    private readonly IConfiguration _Config;
 
-    public KeyvaultAPIAuthorizationMessageHandler(IAccessTokenProvider provider,
-        NavigationManager navigationManager, IConfiguration configuration)
-        : base(provider, navigationManager)
+    private readonly LocalConfigurations _settings;
+
+    public KeyvaultAPIAuthorizationMessageHandler(IAccessTokenProvider provider, NavigationManager navigationManager, LocalConfigurations settings) : base(provider, navigationManager)
     {
-        this._Config = configuration;
+        this._settings = settings;
         ConfigureHandler(
-            authorizedUrls: new[] { _Config["Keyvault:APIBaseUrl"] },
-            scopes: new[] { string.Format("{0}/{1}",_Config["Keyvault:APIApplicatonId"],_Config["Keyvault:ApiScope"]) });
+            authorizedUrls: new[] { _settings.Keyvault.APIBaseUrl  },
+            scopes: new[] { string.Format("{0}/{1}",_settings.Keyvault.APIApplicationId, _settings.Keyvault.ApiScope) });
     }
 }

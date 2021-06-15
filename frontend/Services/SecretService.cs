@@ -15,7 +15,6 @@ namespace keyvault.web.services
     {
 
         private readonly HttpClient _http;
-        private readonly IConfiguration _config;
 
         private readonly LocalConfigurations _settings;
 
@@ -23,9 +22,8 @@ namespace keyvault.web.services
 
         private NavigationManager _navManager;
 
-        public SecretService(IConfiguration configuration, IHttpClientFactory HttpClientFactory, NavigationManager navigationManager, LocalConfigurations settings)
+        public SecretService(IHttpClientFactory HttpClientFactory, NavigationManager navigationManager, LocalConfigurations settings)
         {
-            this._config = configuration;
             this._navManager = navigationManager;
             this._settings = settings;
             this.KeyvaultUrl = _settings.Keyvault.KeyvaultUrl;
