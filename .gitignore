@@ -1,0 +1,13 @@
+/backend/.vscode
+/frontend/.vscode
+*.suo
+*.user
+_ReSharper.*
+/frontend/bin
+/frontend/obj
+packages
+/backend/bin
+/backend/obj
+passwordmanager.sln
+frontend/wwwroot/appsettings.Development.json
+backend/appsettings.Development.json
