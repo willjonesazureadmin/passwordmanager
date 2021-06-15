@@ -36,6 +36,8 @@ public class KeyvayltHealthCheck : IHealthCheck
     {
         try
         {
+            var url = new Uri(hostname);
+            
             IPAddress[] addresses = Dns.GetHostAddresses(hostname.Remove(0, 8));
 
             if (addresses.Length >= 1)

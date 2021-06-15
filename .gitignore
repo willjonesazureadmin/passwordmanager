@@ -11,3 +11,6 @@ packages
 passwordmanager.sln
 frontend/wwwroot/appsettings.Development.json
 backend/appsettings.Development.json
+
+.fake
+.ionide

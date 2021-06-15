@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Server",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -23,13 +23,7 @@
             }
         },
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
-        },
-        {
-            "name": ".NET Core Launch (Blazor Standalone)",
+            "name": "Client",
             "type": "coreclr",
             "request": "launch",
             "program": "dotnet",
@@ -40,15 +34,12 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }
-        },
+        }
+    ],
+    "compounds": [
         {
-            "name": ".NET Core Debug Blazor Web Assembly in Chrome",
-            "type": "pwa-chrome",
-            "request": "launch",
-            "timeout": 30000,
-            "url": "https://localhost:5001",
-            "webRoot": "${workspaceFolder}/frontend",
-            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
+            "name": "Server/Client",
+            "configurations": ["Server", "Client"]
         }
     ]
 }
