@@ -1,1 +1,0 @@
-[Now read about the Azure AD application details here](/docs/architecture/auth/readme.md)
