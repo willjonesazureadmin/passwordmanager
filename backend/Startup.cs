@@ -34,7 +34,7 @@ namespace keyvault.obo
                                     builder.WithOrigins(Configuration["AppConfiguration:FrontEndUrl"].ToString()).AllowAnyHeader().AllowAnyMethod();
                                 });
             });
-            services.AddHealthChecks().AddCheck<KeyvayltHealthCheck>("keyvault_health_check").AddCheck<FrontEndHealthCheck>("frontend_health_check").AddCheck<EnvironmentHealthCheck>("environment_health_check");
+            services.AddHealthChecks().AddCheck<KeyvaultHealthCheck>("keyvault_health_check").AddCheck<FrontEndHealthCheck>("frontend_health_check").AddCheck<EnvironmentHealthCheck>("environment_health_check");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd")).EnableTokenAcquisitionToCallDownstreamApi().AddInMemoryTokenCaches();

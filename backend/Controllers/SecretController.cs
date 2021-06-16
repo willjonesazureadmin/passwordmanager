@@ -32,15 +32,23 @@ namespace keyvault.obo.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await KeyVaultClient.ListSecrets((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl));
+            try
+            {
+                return Ok(await KeyVaultClient.ListSecrets((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl));
+            }
+            catch(Azure.RequestFailedException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }   
         }
-
-        // [HttpGet]
-        // public async Task<IActionResult> GetAsyncChangeKeyvault([FromQuery]string KeyvaultUrl)
-        // {
-        //     this.KeyvaultUrl = KeyvaultUrl;
-        //     return Ok(await KeyVaultClient.ListSecrets((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl));
-        // }
 
         [HttpGet("{SecretId}")]
         public async Task<IActionResult> GetAsync(string SecretId)
@@ -49,27 +57,11 @@ namespace keyvault.obo.Controllers
             return Ok(s);
         }
 
-        // [HttpGet("{SecretId}")]
-        // public async Task<IActionResult> GetAsyncChangeKeyvault(string SecretId, [FromQuery]string KeyvaultUrl)
-        // {
-        //     this.KeyvaultUrl = KeyvaultUrl;
-        //     var s = KeyVaultClient.GetSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, SecretId);            
-        //     return Ok(s);
-        // }
-
         [HttpPost("{SecretId}/update")]
         public async Task<IActionResult> PostAsync(string SecretId, [FromBody]string secret)
         {
             return Ok(KeyVaultClient.UpdateSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, SecretId, secret));
         }
-
-        // [HttpPost("{SecretId}/update")]
-        // public async Task<IActionResult> PostAsyncChangeKeyvault(string SecretId, [FromBody]string secret, [FromQuery]string KeyvaultUrl)
-        // {
-        //     this.KeyvaultUrl = KeyvaultUrl;
-        //     return Ok(KeyVaultClient.UpdateSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, SecretId, secret));
-        // }
-
 
         [HttpPost]
         public async Task<IActionResult> PostAsync(KeyVaultSecret secret)
@@ -77,17 +69,9 @@ namespace keyvault.obo.Controllers
             return Ok(KeyVaultClient.CreateSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, secret));
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> PostAsyncChangeKeyvault(KeyVaultSecret secret, [FromQuery]string KeyvaultUrl)
-        // {
-        //     this.KeyvaultUrl = KeyvaultUrl;
-        //     return Ok(KeyVaultClient.CreateSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, secret));
-        // }
-
-
         private async Task<string> GetToken()
         {
-            return await _tokenAcquisition.GetAccessTokenForUserAsync(new[] { String.Format("api://{0}/{1}",_config["AzureAd:ClientId"],_config["AppConfiguration:ApiScope"]) });
+            return await _tokenAcquisition.GetAccessTokenForUserAsync(new[] { String.Format("{0}/{1}",_config["AzureAd:Audience"],_config["AppConfiguration:ApiScope"]) });
         }
     }
 }

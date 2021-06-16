@@ -27,8 +27,8 @@ namespace keyvault.obo
 
         public override async ValueTask<AccessToken> GetTokenAsync(TokenRequestContext requestContext, CancellationToken cancellationToken)
         {
+            
             AuthenticationResult result = await _confidentialClient.AcquireTokenOnBehalfOf(requestContext.Scopes, _userAssertion).ExecuteAsync();
-
             return new AccessToken(result.AccessToken, result.ExpiresOn);
         }
     }

@@ -72,6 +72,10 @@
     $githubServicePrincpalName = "sp-github-passman",
 
     [Parameter(Mandatory = $false)]
+    [string]
+    $userObjectId = "bc263cdc-16fa-4536-b434-adc38ee38dd9",
+
+    [Parameter(Mandatory = $false)]
     [bool]
     $resetExistingApplications = $false,
     
@@ -173,14 +177,18 @@ function CreateApp() {
 
      [Parameter(Mandatory = $true)]
      [string]
-     $tenantDomainName
+     $tenantDomainName,
+
+     [Parameter(Mandatory = $false)]
+     [bool]
+     $multiTenant = $false    
  )
 
     #Create Azure AD Application registrations for frontend and backend apps if they do not exist
     Write-Host "Application does not exist" $applicationName -ForegroundColor Red
     write-host "Creating a new application" -ForegroundColor Yellow
     $identifier = "api://" + $applicationName.replace(" ", "-") + "." + $tenantDomainName
-    $application = New-AzADApplication -DisplayName $applicationName -IdentifierUris $identifier -InformationAction SilentlyContinue -WarningAction SilentlyContinue 
+    $application = New-AzADApplication -DisplayName $applicationName -IdentifierUris $identifier -InformationAction SilentlyContinue -WarningAction SilentlyContinue -AvailableToOtherTenants $multiTenant
     New-AzADServicePrincipal -ApplicationId $application.ApplicationId -SkipAssignment
     Start-Sleep -Seconds 5
     $app = (az ad app show --id $application.ApplicationId) | Convertfrom-Json
@@ -228,6 +236,8 @@ function AmendParameters() {
     $Parameters.parameters.frontendCustomDnsName.value = $frontendCustomDnsName
     $Parameters.parameters.frontendRepositoryUrl.value = $repositoryUrl
     $Parameters.parameters.keyVaultName.value = $keyvaultName
+    $Parameters.parameters.backendApplicationId = $backendApplication.AppId
+    $Parameters.parameters.userObjectId = $userObjectId
  
     return $Parameters
 }
@@ -262,12 +272,6 @@ $WarningPreference = "Continue"
 
 if($installAzModules -eq $true) { Install-Module az -Scope CurrentUser -Force }
 
-### Load parameter file sample from repo, amend parameters and output to correct repo location for pipeline###
-$configParameters = Loadfile -FilePath ($samplesPath + $parametersFileSamplePath ) -ErrorAction Stop| Convertfrom-Json
-$configParameters = AmendParameters -Parameters $configParameters -ErrorAction Stop 
-ExportFile $parametersFilePath ($configParameters | ConvertTo-Json)
-
-
 ###Log into Azure Powershell and CLI###
 If($loginToPSandCLI -eq $true) {
 write-host "Logging in to AZ CLI and AZ Powershell....we need both"
@@ -294,6 +298,10 @@ if(($manifestConfig -eq $true) -or ($resetExistingApplications -eq $true))
     UploadManifest $frontendApplication "frontend" (ProcessManifest $samplesPath $frontendApplication "frontend" $backendApplication $backendManifest $frontendReplyUrl)
 }
 
+### Load parameter file sample from repo, amend parameters and output to correct repo location for pipeline###
+$configParameters = Loadfile -FilePath ($samplesPath + $parametersFileSamplePath ) -ErrorAction Stop | Convertfrom-Json
+$configParameters = AmendParameters -Parameters $configParameters -ErrorAction Stop 
+ExportFile $parametersFilePath ($configParameters | ConvertTo-Json)
 
 ###Update the frontend application settings file, this is not secret so write back to the repo
 write-host "Preparing Public App Settings Values" -ForegroundColor yellow
@@ -322,6 +330,7 @@ if($resetApplicationSecrets -eq $true)
     $backendAppSettingsSecret[4].value = $backendApplication.appId
     $backendAppSettingsSecret[6].value = ("https://" + $configParameters.parameters.keyVaultName.value + ".vault.azure.net")
     $backendAppSettingsSecret[8].value = $frontendHostName
+    $backendAppSettingsSecret[9].value = $backendApplication.identifierUris[0]
 
     write-host "Store this secret as APP_SETTINGS:" -ForegroundColor red
     $backendAppSettingsSecret | ConvertTo-Json

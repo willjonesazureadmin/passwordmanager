@@ -70,6 +70,12 @@
         },
         "keyVaultName": {
             "value": "azureadminpassmankv"
+        },
+        "userObjectId" : {
+            "value": "bc263cdc-16fa-4536-b434-adc38ee38dd9"
+        },
+        "backendApplicationId" : {
+            "value": "9684c289-a0a3-48a8-aa1b-1aab4bba5092"
         }
     }
 }
