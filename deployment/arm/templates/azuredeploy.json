@@ -29,6 +29,9 @@
         "backendCurrentStack": {
             "type": "String"
         },
+        "backendApplicationId": {
+            "type": "String"
+        },
         "frontendName": {
             "type": "string",
             "defaultValue": "swa-pmp-fe-001"
@@ -83,7 +86,11 @@
         "keyVaultName": {
             "type": "string",
             "defaultValue": "azureadminpassmankv"
-        }
+        },
+        "userObjectId": {
+            "type": "string",
+            "defaultValue": ""
+        }        
     },
     "resources": [
         {
@@ -225,6 +232,12 @@
                 "parameters": {
                     "keyVaultName": {
                         "value": "[parameters('keyVaultName')]"
+                    },
+                    "backendApplicationId": {
+                        "value": "[parameters('backendApplicationId')]"
+                    },
+                    "userObjectId": {
+                        "value": "[parameters('userObjectId')]"
                     }
                 },
                 "mode": "Incremental",
@@ -234,6 +247,12 @@
                     "parameters": {
                         "keyVaultName": {
                             "type": "string"
+                        },
+                        "backendApplicationId" : {
+                            "type" : "string"
+                        },
+                        "userObjectId" : {
+                            "type" : "string"
                         }
                     },
                     "resources": [
@@ -248,6 +267,24 @@
                                 "enabledForTemplateDeployment": false,
                                 "tenantId": "[subscription().tenantId]",
                                 "accessPolicies": [
+                                    {
+                                        "tenantId": "[subscription().tenantId]",
+                                        "objectId": "[parameters('userObjectId')]",
+                                        "applicationId": "[parameters('backendApplicationId')]",
+                                        "permissions": {
+                                            "secrets": [
+                                                "Get",
+                                                "List",
+                                                "Set",
+                                                "Delete",
+                                                "Recover",
+                                                "Backup",
+                                                "Restore"
+                                            ],
+                                            "keys": [],
+                                            "certificates": []
+                                        }
+                                    }
                                 ],
                                 "sku": {
                                     "name": "standard",

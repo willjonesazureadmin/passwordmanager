@@ -4,14 +4,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using keyvault.helpers;
 
-public class KeyvayltHealthCheck : IHealthCheck
+public class KeyvaultHealthCheck : IHealthCheck
 {
     private readonly IConfiguration _config;
     private bool healthCheckResultHealthy;
 
 
-    public KeyvayltHealthCheck(IConfiguration appConfig)
+    public KeyvaultHealthCheck(IConfiguration appConfig)
     {
         this._config = appConfig;
     }
@@ -19,7 +20,7 @@ public class KeyvayltHealthCheck : IHealthCheck
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
     {
-        DoGetHostAddresses(_config["AppConfiguration:KeyvaultUrl"]);
+        healthCheckResultHealthy = Lookup.DoGetHostAddresses(_config["AppConfiguration:KeyvaultUrl"]);
 
         if (healthCheckResultHealthy)
         {
@@ -32,25 +33,7 @@ public class KeyvayltHealthCheck : IHealthCheck
             "Keyvault DNS not found"));
     }
 
-    public void DoGetHostAddresses(string hostname)
-    {
-        try
-        {
-            var url = new Uri(hostname);
-            
-            IPAddress[] addresses = Dns.GetHostAddresses(hostname.Remove(0, 8));
-
-            if (addresses.Length >= 1)
-            {
-                healthCheckResultHealthy = true;
-            }
-        }
-        catch
-        {
-            healthCheckResultHealthy = false;
-
-        }
-    }
+    
 }
 
 public class FrontEndHealthCheck : IHealthCheck
@@ -67,7 +50,7 @@ public class FrontEndHealthCheck : IHealthCheck
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default(CancellationToken))
     {
-        DoGetHostAddresses(_config["AppConfiguration:FrontEndUrl"]);
+        healthCheckResultHealthy = Lookup.DoGetHostAddresses(_config["AppConfiguration:FrontEndUrl"]);
 
         if (healthCheckResultHealthy)
         {
@@ -77,25 +60,9 @@ public class FrontEndHealthCheck : IHealthCheck
 
         return Task.FromResult(
             new HealthCheckResult(context.Registration.FailureStatus,
-            "FrontEnd DNS not found"));
+            String.Format("FrontEnd DNS not found: {0}",_config["AppConfiguration:FrontEndUrl"])));
     }
 
-    public void DoGetHostAddresses(string hostname)
-    {
-        try
-        {
-            IPAddress[] addresses = Dns.GetHostAddresses(hostname.Remove(0, 8));
-
-            if (addresses.Length >= 1)
-            {
-                healthCheckResultHealthy = true;
-            }
-        }
-        catch
-        {
-            healthCheckResultHealthy = false;
-        }
-    }
 
     
 }
@@ -112,3 +79,7 @@ public class EnvironmentHealthCheck : IHealthCheck
     }
    
 }
+
+
+
+
