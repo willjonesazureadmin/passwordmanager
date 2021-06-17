@@ -2,10 +2,11 @@
 
 The fundamental goal of the password manager project is to quickly store, update and retrieve secrets from a keyvault that is secured using the user's identity. As if they were looking at the keyvault through the Azure portal. To achieve this goal the password manager application is made of 4 core components.
 
-* [Application Frontend](#application-frontend)
-* [Application Backend (Proxy)](#Application-Backend-proxy)
-* [Keyvault](#keyvault)
-* [Azure AD Applications](#Azure-ad-applications)
+- [Password Manager Architecture](#password-manager-architecture)
+  - [Application Frontend](#application-frontend)
+  - [Application Backend (Proxy)](#application-backend-proxy)
+  - [KeyVault](#keyvault)
+  - [Azure AD Applications](#azure-ad-applications)
 
 
 ![Passman Architecture](/docs/images/passman-architecture.png)
@@ -13,7 +14,7 @@ The fundamental goal of the password manager project is to quickly store, update
 The frontend application is designed to allow a user(s) to save and retrieve secrets stored in an Azure Keyvault utilsing their Azure AD identity. An application frontend cannot make calls directly to the keyvault due to CORS policies that cannot be changed on the keyvault. Therefore a middle-tier application must "proxy" the connection/identity/authorisation to the keyvault, in this case the applicaiton backend. 
 
 ### Application Frontend
-The frontend application is a static web applicaiton written in Blazor C# and hosted on an Azure Static Web App. This application is the user's interface to the password manager service. The frontend applicaiton is registered in the user's Azure AD tenant as a single-page application with the following OAuth permissions to sign the user in, and access the backend application as the signed in user.
+The frontend application is a static web application written in Blazor C# and hosted on an Azure Static Web App. This application is the user's interface to the password manager service. The frontend application is registered in the user's Azure AD tenant as a single-page application with the following OAuth permissions to sign the user in, and access the backend application as the signed in user.
 The frontend application performs REST queries to the proxy backend application to perform CRUD operations to the keyvault within Azure. 
 
 [Deep dive into the frontend here](/docs/architecture/frontend/readme.md)
