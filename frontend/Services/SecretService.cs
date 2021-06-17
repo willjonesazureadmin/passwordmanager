@@ -42,7 +42,7 @@ namespace keyvault.web.services
                 var dataRequest = await _http.GetAsync(String.Format("{0}/secret", _settings.Keyvault.APIBaseUrl));
                 if (!dataRequest.IsSuccessStatusCode)
                 {
-                    throw new ApplicationException($"Reasong: {dataRequest.ReasonPhrase}"); //or add a custom logic here
+                    throw new ApplicationException($"Reason: {dataRequest.ReasonPhrase}"); //or add a custom logic here
                 }
                 return await dataRequest.Content.ReadFromJsonAsync<List<IndexViewSecretModel>>();
 
@@ -50,12 +50,12 @@ namespace keyvault.web.services
             catch (AccessTokenNotAvailableException exception)
             {
                 exception.Redirect();
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
             catch (Exception exception)
             {
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
         }
@@ -67,7 +67,7 @@ namespace keyvault.web.services
                 var dataRequest = await _http.GetAsync(String.Format("{0}/secret/{1}", _settings.Keyvault.APIBaseUrl, name));
                 if (!dataRequest.IsSuccessStatusCode)
                 {
-                    throw new ApplicationException($"Reasong: {dataRequest.ReasonPhrase}"); //or add a custom logic here
+                    throw new ApplicationException($"Reason: {dataRequest.ReasonPhrase}"); //or add a custom logic here
                 }
                 return await dataRequest.Content.ReadFromJsonAsync<SecretModel>();
 
@@ -75,12 +75,12 @@ namespace keyvault.web.services
             catch (AccessTokenNotAvailableException exception)
             {
                 exception.Redirect();
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
             catch (Exception exception)
             {
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
         }
@@ -91,7 +91,7 @@ namespace keyvault.web.services
                 var dataRequest = await _http.GetAsync(String.Format("{0}/secret/{1}", _settings.Keyvault.APIBaseUrl, name));
                 if (!dataRequest.IsSuccessStatusCode)
                 {
-                    throw new ApplicationException($"Reasong: {dataRequest.ReasonPhrase}"); //or add a custom logic here
+                    throw new ApplicationException($"Reason: {dataRequest.ReasonPhrase}"); //or add a custom logic here
                 }
                 return await dataRequest.Content.ReadFromJsonAsync<DetailsViewSecretModel>();
 
@@ -99,12 +99,12 @@ namespace keyvault.web.services
             catch (AccessTokenNotAvailableException exception)
             {
                 exception.Redirect();
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
             catch (Exception exception)
             {
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
         }
@@ -117,7 +117,7 @@ namespace keyvault.web.services
                 var dataRequest = await _http.PostAsJsonAsync(String.Format("{0}/secret/{1}/update", _settings.Keyvault.APIBaseUrl, name), password);
                 if (!dataRequest.IsSuccessStatusCode)
                 {
-                    throw new ApplicationException($"Reasong: {dataRequest.ReasonPhrase}"); //or add a custom logic here
+                    throw new ApplicationException($"Reason: {dataRequest.ReasonPhrase}"); //or add a custom logic here
                 }
                 return;
 
@@ -125,12 +125,12 @@ namespace keyvault.web.services
             catch (AccessTokenNotAvailableException exception)
             {
                 exception.Redirect();
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
             catch (Exception exception)
             {
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
 
@@ -143,7 +143,7 @@ namespace keyvault.web.services
                 var dataRequest = await _http.PostAsJsonAsync(String.Format("{0}/secret", _settings.Keyvault.APIBaseUrl), model);
                 if (!dataRequest.IsSuccessStatusCode)
                 {
-                    throw new ApplicationException($"Reasong: {dataRequest.ReasonPhrase}"); //or add a custom logic here
+                    throw new ApplicationException($"Reason: {dataRequest.ReasonPhrase}"); //or add a custom logic here
                 }
                 return;
 
@@ -151,12 +151,12 @@ namespace keyvault.web.services
             catch (AccessTokenNotAvailableException exception)
             {
                 exception.Redirect();
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
             catch (Exception exception)
             {
-                throw new ApplicationException($"Reasong: {exception.Message}"); //or add a custom logic here
+                throw new ApplicationException($"Reason: {exception.Message}"); //or add a custom logic here
 
             }
 
