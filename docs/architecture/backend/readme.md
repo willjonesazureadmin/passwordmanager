@@ -25,6 +25,48 @@ The Keyvault client is a [static helper](/backend/helpers/KeyVaultClient.cs) cla
 ### Health Service
 The application will perform several basic health checks which can be checked by querying the /health URL.
 
+### Application Settings
+Application [settings](/backend/appsettings.json) are imported when the application starts. These are the key settings that are required to use the app. 
+
+```
+{
+  "AppConfiguration" : {
+    "ApiScope" : "user_impersonation",
+    "KeyvaultUrl" : "#{KeyvaultUrl}#",
+    "FrontEndUrl" : "#{FrontEndUrl}#"
+  },
+  "AzureAd": {
+    "Instance": "https://login.microsoftonline.com/",
+    "Domain": "#{Domain}#",
+    "TenantId": "#{TenantId}#",
+    "ClientId": "#{ClientId}#",
+    "ClientSecret" :"#{ClientSecret}#",
+    "Audience" : "#{Audience}#",
+    "CallbackPath": "/signin-oidc"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*"
+}
+
+```
+
+| Setting | Use |
+|---|---|
+| AppConfiguration: ApiScope | The scope that the frontend application should present to access the backend app |
+| AppConfiguration: KeyvaultUrl | The URL of the keyvault to access |
+| AppConfiguration: FrontEndUrl | The frontend app url for CORS policy |
+| AzureAd: Instance | The Azure AD endpoint |
+| AzureAd: Domain | The Azure AD Domain |
+| AzureAd: TenantId | The Azure AD Tenant Id |
+| AzureAd: ClientId | The backend application identifier |
+| AzureAd: ClientSecret | The backend application secret |
+| AzureAd: Audience | The expected audience that the app should validate |
 
 <- [Back to Summary](/docs/architecture/readme.md) | [Now read about the Azure AD application details here](/docs/architecture/auth/readme.md) ->
 

@@ -6,15 +6,15 @@ The frontend application is a Blazor WebAssembly hosted on an Azure Static Web A
 
 The application structure for pages is as follows:
 
-- [Index (Home)](\frontend\Pages\Index.razor) - Default Document Homepage
-- [About](\frontend\Pages\About.razor) - About the application
-- [Settings](\frontend\Pages\Settings.razor) - Review the application Settings
-- [Token](\frontend\Pages\Token.razor) - View the Azure AD Auth Token used by the application
+- [Index (Home)](/frontend/Pages/Index.razor) - Default Document Homepage
+- [About](/frontend/Pages/About.razor) - About the application
+- [Settings](/frontend/Pages/Settings.razor) - Review the application Settings
+- [Token](/frontend/Pages/Token.razor) - View the Azure AD Auth Token used by the application
 - Secrets
-  - [Add](\frontend\Pages\Secrets\Add.razor) - Add a new secret
-  - [Details](\frontend\Pages\Secrets\Details.razor) - View details of a secret
-  - [Edit](\frontend\Pages\Secrets\Edit.razor) - Edit an existing secret
-  - [Index](\frontend\Pages\Secrets\Index.razor) - Lists all Secrets in Keyvault
+  - [Add](/frontend/Pages/Secrets/Add.razor) - Add a new secret
+  - [Details](/frontend/Pages/Secrets/Details.razor) - View details of a secret
+  - [Edit](/frontend/Pages/Secrets/Edit.razor) - Edit an existing secret
+  - [Index](/frontend/Pages/Secrets/Index.razor) - Lists all Secrets in Keyvault
 
 ### REST Operations
 Requests to the proxy backend application are handled using a service injected into the relevant pages [SecretService](/frontend/Services/SecretService.cs) class to perform the CRUD style rest operations. The SecretService relies on a custom HTTP Client to authenticate calls with a JWT.
@@ -52,9 +52,9 @@ Application [settings](/frontend/wwwroot/appsettings.json) are imported when the
 |---|---|
 | AzureAd: Authority | The Directory endpoint for user login and token issuance | 
 | AzureAd: ClientId | The public client Id as registered in Azure Ad |
-| AzureAd: ValidateAuthority | Validate that the authority is correct | 
+| AzureAd: ValidateAuthority | Validate that the authority is correct |
 | Keyvault: ApiClientName | This is the name of the HTTP Client that is registered at startup and then used by the SecretService |
-| Keyvault: ApiScope | The name of the API Scope as reqistered by the backend application |
+| Keyvault: ApiScope | The name of the API Scope as registered by the backend application |
 | Keyvault: ApiApplicationId | The backend application Id as registered in Azure Ad |
 | Keyvault: KeyvaultUrl | The Keyvault where the secrets are stored |
 
