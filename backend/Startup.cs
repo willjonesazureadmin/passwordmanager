@@ -52,8 +52,8 @@ namespace keyvault.obo
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "keyvault.obo v1"));
             }
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "keyvault.obo v1"));
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors(MyAllowSpecificOrigins);
@@ -67,6 +67,7 @@ namespace keyvault.obo
                     ResponseWriter = Responder.WriteResponse
                 });
             });
+            
         }
     }
 }

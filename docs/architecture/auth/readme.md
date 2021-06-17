@@ -18,9 +18,10 @@ Applications are registered in Azure AD. A user must consent to both application
 |Backend|Access Keyvault| Azure KeyVault - user_impersonation |
 |Backend| Sign In User | Graph - User.Read |
 
-As the backend application does not sign in users interactively consent must be gained from the user when they sign into the frontend application. To do this the backend application is configured with a "knownClientId" which is the application Id of the front end application. This means that when a user signs in for the first time they are presented with a consent page for all the applicaitons in the stack. 
+As the backend application does not sign in users interactively consent must be gained from the user when they sign into the frontend application. To do this the backend application is configured with a "knownClientId" which is the application Id of the front end application. This means that when a user signs in for the first time they are presented with a consent page for all the applications in the stack. 
 
-All of these settings are configured either through the Azure Portal or via scripting the upload of a manifest file that is a JSON representation of the applcation registrations. 
+All of these settings are configured either through the Azure Portal or via scripting the upload of a manifest file that is a JSON representation of the application registrations. 
 
-The frontend application is a "public" application, as such, all information regarding the client is public and it does not use application secrets. The backend applicaiton is a confidential client and can contain secrets that are used to autehtnicate the application and to create confidential client tokens. The frontend and backend applications use the Microsoft Authetnication Library (MSAL) more details can be found [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-applications).
+The frontend application is a "public" application, as such, all information regarding the client is public and it does not use application secrets. The backend application is a confidential client and can contain secrets that are used to authenticate the application and to create confidential client tokens. The frontend and backend applications use the Microsoft Authentication Library (MSAL) more details can be found [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-client-applications).
 
+<- [Back to Summary](/docs/architecture/readme.md) | [Now read the setup guide here](/docs/setup/readme.md) ->
