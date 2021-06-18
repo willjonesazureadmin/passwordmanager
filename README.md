@@ -1,6 +1,6 @@
 # Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/azure-static-web-apps-witty-bush-0efccd803.yml/badge.svg)
 
-Password Manager *(passman)* built to store and retrieve passwords securely from an Azure Keyvault...your own personal password manager. 
+Password Manager *(passman)* built to store and retrieve passwords securely from an Azure Key vault...your own personal password manager.
 
 ![Passman Architecture](/docs/images/passman.png)
 
@@ -11,9 +11,9 @@ Password Manager *(passman)* built to store and retrieve passwords securely from
 * [Frontend](/docs/architecture/frontend/readme.md)
 * [Backend](/docs/architecture/backend/readme.md)
 * [Authentication](/docs/architecture/auth/readme.md)
-* [Repo](/docs/repo/readme.md)
-* [Pipelines](/docs/pipelines/readme.md)
-* [Setup Guides](/docs/setup/readme.md)
+* [Repo](/docs/repo/readme.md) - COMING SOON
+* [Pipelines](/docs/pipelines/readme.md) - COMING SOON
+* [Setup Guides](/docs/setup/readme.md) - COMING SOON
 * [Demo Application](https://passman.azureadmin.co.uk)
 
 ## Goal of passman 
