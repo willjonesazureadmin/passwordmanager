@@ -5,7 +5,7 @@ To build your own password manager service you will require the perform the foll
 * Generate PAT token for your user account
 * Create an Azure AD Service Principal to be used by Github
 * Register Azure AD Applications
-* Amend frontend public appsettings
+* Amend frontend public appsettings.json
 * Amend Azure Deployment Parameters
 * Configure Github Secrets
 * Deploy Azure Resources
@@ -40,9 +40,18 @@ Ensure you copy the PAT we will save it as a Github secret later.
 >
 >The script will automate some the steps below, if you choose to run the script, jump straight to the [run configuration script](#configure-with-script)
 
-
 ### Create Azure AD Service Principal
-To Authenticate to Azure Github requires credentials. 
+To Authenticate to Azure Github requires credentials to be created and stored as a secret, to be consumed by the deployments. Create an appropriate service principal and assign permissions following this [guide](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure#:~:text=Create%20a%20service%20principal%20and%20add%20it%20to%20GitHub%20secret,-To%20use%20Azure&text=Open%20Azure%20Cloud%20Shell%20in%20the%20Azure%20portal%20or%20Azure%20CLI%20locally.&text=Create%20a%20new%20service%20principal,be%20assigned%20the%20Contributor%20role.&text=Copy%20the%20JSON%20object%20for%20your%20service%20principal.).
+Make note of the output as you need to save these as a Github secret.
+
+
+### Register Azure AD Applications
+From within the Azure Portal you will need to register two Azure AD Applications. For the backend application register an Azure AD application with the following settings:
+
+
+
+
+
 
 
 

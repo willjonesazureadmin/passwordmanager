@@ -29,7 +29,3 @@ The goal of passman is to develop my C# OOP with real world applicable use cases
 
 [Continue learning about passman here](/docs/architecture/readme.md) by reading about the architecture.
 
-
-
-
-
