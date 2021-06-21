@@ -1,4 +1,158 @@
-﻿Param(   
+﻿<#
+.SYNOPSIS
+    Configure all local files, register appropriate azure config and output to screen any required secrets to be registered to Azure
+    
+.PARAMETER repositoryUrl
+    The URL of the repo you have cloned as hosted onb Github
+
+.PARAMETER keyvaultName
+    Your chosen name globally unique for the keyvault to create and configure
+
+.PARAMETER backendApplicationName
+    Your chosen backend globally unique name for the backend application
+
+.PARAMETER frontendApplicationName
+    The frontend applicaiton name - this is not the built in domain name or custom domain
+
+.PARAMETER deploymentSubscriptionId
+    The subscription Id you wish to deploy to, this will also be used to configure the service principal and permissions
+
+.PARAMETER dnsZoneSubscription
+    If using a different subscription for Azure DNS, enter it here
+
+.PARAMETER dnsZoneResourceGroup
+    The resource group for the Azure DNS zone
+
+.PARAMETER customDnsZone
+    The custom DNS zone you wish to use for the Azure DNS and frontend application
+
+.PARAMETER frontendCustomDnsName
+    The custom DNS prefix for the frontend applicaiton
+
+.PARAMETER tenantDomainName
+    Your tenant Id for Azure AD
+
+.PARAMETER githubServicePrincpalName
+    Name of the service principal that is registered in Azure
+
+.PARAMETER resetExistingApplications
+    If you are running this script multiple times - this will reset the application configuration and IDs
+
+.PARAMETER resetApplicationSecrets
+    Reset the applicaiton secrets for the backend application
+
+.PARAMETER resetGitHubSecrets
+    Reset the Github secrets and output to screen
+
+.PARAMETER installAzModules
+    Install Az Module 
+
+.PARAMETER loginToPSandCLI
+    Prompt for login to Az CLI and Powershell
+
+.PARAMETER parametersFilePath
+    The path in the repo to the paramters file that will be amended
+
+.PARAMETER frontEndAppSettingsPath
+    Path to the frontend app settings
+
+.PARAMETER frontEndAppSettingsSamplePath
+    Path to sample app settings
+
+.PARAMETER backendAppSettingsSecretSamplePath
+    Path to sample backend app settings
+
+.PARAMETER parametersFileSamplePath
+    Path to the sample paramters file
+
+.PARAMETER samplesPath
+    Path to samples file
+
+.EXAMPLE
+    .\deployment\scripts\ConfigureDeployment.ps1 -repositoryUrl https://willjonesazureadmin.github.com/passwordmanager -keyvaultName keyvault123 -backendApplicationName backendapp -frontendApplicationName frontendapp -deploymentSubscriptionId xxxxx-xxxxx-PS C:\Users\wjones\source\repos\passwordmanager> .\deployment\scripts\ConfigureDeployment.ps1 -repositoryUrl https://willjonesazureadmin.github.com/passwordmanager -keyvaultName keyvault123 -backendApplicationName backendapp -frontendApplicationName frontendapp -deploymentSubscriptionId xxxxx-xxxxx-PS C:\Users\wjones\source\repos\passwordmanager> .\deployment\scripts\ConfigureDeployment.ps1 -repositoryUrl https://willjonesazureadmin.github.com/passwordmanager -keyvaultName keyvault123 -backendApplicationName backendapp -frontendApplicationName frontendapp -deploymentSubscriptionId xxxxx-xxxxx-xxx-xxxx-xxxx -deploymentResourceGroup deploy-rg -dnsZoneSubscription xxxx-xxxxxxx-xxxxxxx-xxxx -dnsZoneResourceGroup dns-rg -customDnsZone myzone.local -frontendCustomDnsName passwordmanager -tenantDomainName mydomain.onmicrosoft.com -githubServicePrincpalName serviceprincipal123 -userObjectId xxxxx-xxxxx-xxxxx-xxxxx 
+    
+.NOTES
+	Version      : 1.0.0.0
+	Last Updated : 2021-06-21
+	Author       : Will Jones
+	Open Issues  :
+#>
+
+
+
+Param(   
+    [Parameter(Mandatory = $true)]
+    [string]
+    $repositoryUrl,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $keyvaultName,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $backendApplicationName,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $frontendApplicationName,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $deploymentSubscriptionId,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $deploymentResourceGroup,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $dnsZoneSubscription,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $dnsZoneResourceGroup,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $customDnsZone,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $frontendCustomDnsName,
+  
+    [Parameter(Mandatory = $true)]
+    [string]
+    $tenantDomainName,
+  
+    [Parameter(Mandatory = $true)]
+    [string]
+    $githubServicePrincpalName,
+
+    [Parameter(Mandatory = $true)]
+    [string]
+    $userObjectId,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetExistingApplications = $false,
+    
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetApplicationSecrets = $false,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $resetGitHubSecrets = $false,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $installAzModules = $false,
+
+    [Parameter(Mandatory = $false)]
+    [bool]
+    $loginToPSandCLI = $false,
+
     [Parameter(Mandatory = $false)]
     [string]
     $parametersFilePath = ".\deployment\arm\parameters\azuredeploy.parameters.json",
@@ -21,79 +175,7 @@
    
     [Parameter(Mandatory = $false)]
     [string]
-    $samplesPath = ".\deployment\samples\",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $repositoryUrl= "https://github.com/willjonesazureadmin/passwordmanager",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $keyvaultName = "aapasmannkv",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $backendApplicationName = "awa-weu-pmp-be-001",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $frontendApplicationName = "swa-pmp-fe-001",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $deploymentSubscriptionId = "9cd3389c-90fe-414d-b06e-ccd526ad00f0",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $deploymentResourceGroup = "lz2-passman-rg",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $dnsZoneSubscription = "484147e9-d24d-41b4-86a8-50819355deb7",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $dnsZoneResourceGroup = "ss-dns-rg",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $customDnsZone = "azureadmin.co.uk",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $frontendCustomDnsName = "passman",
-  
-    [Parameter(Mandatory = $false)]
-    [string]
-    $tenantDomainName = "azureadmin.co.uk",
-  
-    [Parameter(Mandatory = $false)]
-    [string]
-    $githubServicePrincpalName = "sp-github-passman",
-
-    [Parameter(Mandatory = $false)]
-    [string]
-    $userObjectId = "bc263cdc-16fa-4536-b434-adc38ee38dd9",
-
-    [Parameter(Mandatory = $false)]
-    [bool]
-    $resetExistingApplications = $false,
-    
-    [Parameter(Mandatory = $false)]
-    [bool]
-    $resetApplicationSecrets = $false,
-
-    [Parameter(Mandatory = $false)]
-    [bool]
-    $resetGitHubSecrets = $false,
-
-    [Parameter(Mandatory = $false)]
-    [bool]
-    $installAzModules = $false,
-
-    [Parameter(Mandatory = $false)]
-    [bool]
-    $loginToPSandCLI = $false
+    $samplesPath = ".\deployment\samples\"
 )
 
 function LoadFile() {

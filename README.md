@@ -11,9 +11,9 @@ Password Manager *(passman)* built to store and retrieve passwords securely from
 * [Frontend](/docs/architecture/frontend/readme.md)
 * [Backend](/docs/architecture/backend/readme.md)
 * [Authentication](/docs/architecture/auth/readme.md)
+* [Setup Guide](/docs/setup/readme.md)
 * [Repo](/docs/repo/readme.md) - COMING SOON
 * [Pipelines](/docs/pipelines/readme.md) - COMING SOON
-* [Setup Guides](/docs/setup/readme.md) - COMING SOON
 * [Demo Application](https://passman.azureadmin.co.uk)
 
 ## Goal of passman 

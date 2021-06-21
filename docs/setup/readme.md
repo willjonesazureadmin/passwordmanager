@@ -41,20 +41,23 @@ Only kidding, but you will need to decide some parameters that have to be global
 
 ---
 
->The majority of the following steps have been automated as much as possible to simplify them. The ConfigureDeployment.ps1 script located [here](/deployment/scripts/) when run against your repo with the correct settings will perform the following tasks:
->
->1) Amend the ARM deployment parameters file with your desired parameters
->2) Register the appropriate Azure AD Applications in your tenant
->3) Update the Azure AD Application manifest files with the appropriate configuration
->4) Update the frontend appsettings.json file and save it in your repo
->5) Generate a service principal with permissions to the correct scopes and output to screen
->6) Generate Secret values for the backend application and output to screen
->7) Generate Subscription value and output to screen
->8) Generate Resource group values and output to screen
->
->The script will automate some the steps below, if you choose to run the script, jump straight to the [run configuration script](#configure-with-script)
+### Configuration Script
+
+The majority of the following steps have been automated as much as possible to simplify them. The ConfigureDeployment.ps1 script located [here](/deployment/scripts/) when run against your repo with the correct settings will perform the following tasks:
+
+1) Amend the ARM deployment parameters file with your desired parameters
+2) Register the appropriate Azure AD Applications in your tenant
+3) Update the Azure AD Application manifest files with the appropriate configuration
+4) Update the frontend appsettings.json file and save it in your repo
+5) Generate a service principal with permissions to the correct scopes and output to screen
+6) Generate Secret values for the backend application and output to screen
+7) Generate Subscription value and output to screen
+8) Generate Resource group values and output to screen
+
+The script will automate some the steps below, if you choose to run the script, jump straight to the [run configuration script](#configure-with-script)
 
 ---
+
 ### Create Azure AD Service Principal
 
 To Authenticate to Azure Github requires credentials to be created and stored as a secret, to be consumed by the deployments. Create an appropriate service principal and assign permissions following this [guide](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure#:~:text=Create%20a%20service%20principal%20and%20add%20it%20to%20GitHub%20secret,-To%20use%20Azure&text=Open%20Azure%20Cloud%20Shell%20in%20the%20Azure%20portal%20or%20Azure%20CLI%20locally.&text=Create%20a%20new%20service%20principal,be%20assigned%20the%20Contributor%20role.&text=Copy%20the%20JSON%20object%20for%20your%20service%20principal.).
@@ -101,6 +104,7 @@ From within the Azure Portal you will need to register two Azure AD Applications
 * Your Tenant Id
 
 ---
+
 ### Amend Frontend Application Settings
 
 Configure the frontend application settings to match the settings you have configured. The file [appsettings.json](/frontend/wwwroot/appsettings.json) should be changed as per the below table, leave all other settings as is in the file:
@@ -109,11 +113,12 @@ Configure the frontend application settings to match the settings you have confi
 |---|---|
 | AzureAd: Authority | Your tenant Id |
 | AzureAd: ClientId | The application Id for the frontend app registration |
-| key vault: ApiScope | The name of the API Scope as registered by the backend application |
-| key vault: ApiApplicationId | The backend application Id as registered in Azure Ad |
-| key vault: key vaultUrl | The key vault name you have chosen |
+| keyvault: ApiScope | The name of the API Scope as registered by the backend application |
+| keyvault: ApiApplicationId | The backend application Id as registered in Azure Ad |
+| keyvault: key vaultUrl | The key vault name you have chosen |
 
 ---
+
 ### Amend Deployment Parameters
 
 To deploy the application stack, the [azuredeploy.parameters.json](/deployment/arm/parameters/azuredeploy.parameters.json) file needs to be configured with the appropriate settings. As per the steps completed previously.
@@ -173,4 +178,3 @@ From within the production environment add the following secrets:
 ### Deploy
 
 You are now ready to deploy the application. This is done via [the pipeline deploy-production.yml](/.github/workflows/deploy-production.yml). Push your changes to main and this will trigger the pipeline. If all settings are configured correctly the deployment will succeed and this will also generate a new workflow action that is generated automatically by the deployment of an Azure Static web app.
-
