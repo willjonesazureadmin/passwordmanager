@@ -242,6 +242,22 @@ function AmendParameters() {
     return $Parameters
 }
 
+function RemoveFile() {
+    [CmdletBinding()]
+    Param
+    (
+        [Parameter(Mandatory = $true)]
+        [object]
+        $FilePath
+   
+    )
+       ###Amend and return the paramters file
+        write-host "Removing File $FilePath" -ForegroundColor Yellow
+        Remove-Item -Path $FilePath -Force
+        Write-Host "File Remove" -ForegroundColor Green
+    
+       return $Parameters
+   }
 function CreateAppSecret($application) {
     #Create secret for backend application
     Write-Host "Creating new secret for application" $application.ApplicationId -ForegroundColor Yellow
@@ -278,7 +294,6 @@ write-host "Logging in to AZ CLI and AZ Powershell....we need both"
 az login
 Login-AzAccount
 }
-
 
 ###Build additional variables from input parameters
 $frontendHostName = ($frontendCustomDnsName + "." + $customDnsZone)
@@ -350,6 +365,11 @@ $deploymentResourceGroup
 write-host "Store this secret as AZURE_SUBSCRIPTION:" -ForegroundColor red
 $deploymentSubscriptionId
 
-##TO DO API WRITE TO GITHUB
+##TIDY UP FILES
+RemoveFile -FilePath ".\.github\workflows\*azure-static*"
+RemoveFile -FilePath ".\*.temp.json "
+
+
+
 
 

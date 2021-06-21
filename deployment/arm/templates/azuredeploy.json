@@ -9,25 +9,32 @@
             "type": "String"
         },
         "backendAlwaysOn": {
-            "type": "Bool"
+            "type": "Bool",
+            "defaultValue" : false
         },
         "backendSku": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "Shared"
         },
         "backendSkuCode": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "D1"
         },
         "backendWorkerSize": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "0"
         },
         "backendWorkerSizeId": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "0"
         },
         "backendNumberOfWorkers": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "1"
         },
         "backendCurrentStack": {
-            "type": "String"
+            "type": "String",
+            "defaultValue" : "dotnetcore"
         },
         "backendApplicationId": {
             "type": "String"
@@ -57,15 +64,23 @@
         },
         "FrontendAppLocation": {
             "type": "string",
-            "defaultValue": "/"
+            "defaultValue": "/frontend"
         },
         "frontendApiLocation": {
             "type": "string",
             "defaultValue": ""
         },
-        "FrontendAppArtifactLocation": {
+        "frontendAppArtifactLocation": {
             "type": "string",
             "defaultValue": "wwwroot"
+        },
+        "deployDns" : {
+            "type" : "bool",
+            "defaultValue" : false
+        },
+        "configureCustomDns" : {
+            "type" : "bool",
+            "defaultValue" : false
         },
         "customDnsZone": {
             "type": "string",
@@ -77,11 +92,11 @@
         },
         "dnsZoneSubscription": {
             "type": "string",
-            "defaultValue": "484147e9-d24d-41b4-86a8-50819355deb7"
+            "defaultValue": ""
         },
         "dnsZoneResourceGroup": {
             "type": "string",
-            "defaultValue": "ss-dns-rg"
+            "defaultValue": ""
         },
         "keyVaultName": {
             "type": "string",
@@ -334,7 +349,7 @@
                         "value": "[parameters('frontendApiLocation')]"
                     },
                     "appArtifactLocation": {
-                        "value": "[parameters('FrontendAppArtifactLocation')]"
+                        "value": "[parameters('frontendAppArtifactLocation')]"
                     }
                 },
                 "mode": "Incremental",
@@ -432,6 +447,9 @@
                     },
                     "customDnsAlias": {
                         "value": "[reference('FrontendApp').outputs.staticWebAppHostName.value]"
+                    },
+                    "deployDns": {
+                        "value": "[parameters('deployDns')]"
                     }
                 },
                 "template": {
@@ -440,20 +458,25 @@
                     "parameters": {
                         "customDnsZone": {
                             "type": "string",
-                            "defaultValue": "azureadmin.co.uk"
+                            "defaultValue": ""
                         },
                         "customDnsName": {
                             "type": "string",
-                            "defaultValue": "test"
+                            "defaultValue": ""
                         },
                         "customDnsAlias": {
                             "type": "string",
-                            "defaultValue": "testAlias"
+                            "defaultValue": ""
+                        },
+                        "deployDns" : {
+                            "type" : "bool",
+                            "defaultValue" : false
                         }
                     },
                     "resources": [
                         {
                             "type": "Microsoft.Network/dnsZones",
+                            "condition" : "[parameters('deployDns')]",
                             "apiVersion": "2018-05-01",
                             "name": "[parameters('customDnsZone')]",
                             "location": "global",
@@ -463,6 +486,7 @@
                         },
                         {
                             "type": "Microsoft.Network/dnsZones/CNAME",
+                            "condition" : "[parameters('deployDns')]",
                             "apiVersion": "2018-05-01",
                             "name": "[concat(parameters('customDnsZone'), '/', parameters('customDnsName'))]",
                             "location": "global",
@@ -503,6 +527,9 @@
                     },
                     "customDnsZone": {
                         "value": "[parameters('customDnsZone')]"
+                    },
+                    "configureCustomDns" : {
+                        "value" : "[parameters('configureCustomDns')]"
                     }
                 },
                 "template": {
@@ -520,11 +547,16 @@
                         "customDnsZone": {
                             "type": "string",
                             "defaultValue": "testzone.com"
+                        },
+                        "configureCustomDns" : {
+                            "type" : "bool",
+                            "defaultValue" : false
                         }
                     },
                     "resources": [
                         {
                             "type": "Microsoft.Web/staticSites/customDomains",
+                            "condition" : "[parameters('configureCustomDns')]",
                             "apiVersion": "2020-12-01",
                             "name": "[concat(parameters('frontendName'),'/', parameters('frontendCustomDnsName'),'.',parameters('customDnsZone'))]",
                             "dependsOn": [

@@ -8,35 +8,8 @@
         "backendHostingPlanName": {
             "value": "asp-weu-pmp-001"
         },
-        "backendAlwaysOn": {
-            "value": false
-        },
-        "backendSku": {
-            "value": "Shared"
-        },
-        "backendSkuCode": {
-            "value": "D1"
-        },
-        "backendWorkerSize": {
-            "value": "0"
-        },
-        "backendWorkerSizeId": {
-            "value": "0"
-        },
-        "backendNumberOfWorkers": {
-            "value": "1"
-        },
-        "backendCurrentStack": {
-            "value": "dotnetcore"
-        },
         "frontendName": {
             "value": "swa-pmp-fe-001"
-        },
-        "frontendSku": {
-            "value": "Free"
-        },
-        "frontendSkuCode": {
-            "value": "Free"
         },
         "frontendRepositoryUrl": {
             "value": "https://github.com/willjonesazureadmin/passwordmanager"
@@ -47,14 +20,11 @@
         "frontendRepositoryToken": {
             "value": ""
         },
-        "frontendAppLocation": {
-            "value": "/frontend"
+        "deployDns" : {
+            "value": "true"
         },
-        "frontendApiLocation": {
-            "value": ""
-        },
-        "frontendAppArtifactLocation": {
-            "value": "wwwroot"
+        "configureCustomDns" : {
+            "value": "true"
         },
         "customDnsZone": {
             "value": "azureadmin.co.uk"
