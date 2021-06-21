@@ -29,7 +29,7 @@ The backend application recieves queries from the frontend applicaiton and proxi
 ### key vault
 An Azure key vault is configured with permissions to allow an application and a user to perform secret operations. The application can only perform secret operations using a compound identity of the application and the user.
 
-[Deep dive into the key vault here](/docs/architecture/keyvualt/readme.md)
+[Deep dive into the key vault here](/docs/architecture/keyvault/readme.md)
 
 ### Azure AD Applications
 The Azure AD Applications are key to allow secure authenticated and proper authorised access to the secrets within the Azure key vault. Two applications are registered, the frontend application and the backend application.

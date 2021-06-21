@@ -10,9 +10,7 @@ To build your own password manager service you will require the perform the foll
 * Amend frontend public appsettings.json
 * Amend Azure Deployment Parameters
 * Configure Github Secrets
-* Deploy Azure Resources
-* Frontend Application Code Deployment
-* Backend Application Code Deployment
+* Deploy Azure Resources, Frontend Code and Backend Code
 
 ---
 
@@ -38,6 +36,8 @@ Only kidding, but you will need to decide some parameters that have to be global
 3) Frontend Application Name
 4) Your DNS hosting option, ideally use Azure DNS as this is fully integrated into the ARM template deployment
 5) The custom DNS frontend name
+6) The Azure Subscription to use
+7) The name of the resource group to deploy to
 
 ---
 
@@ -54,6 +54,7 @@ Only kidding, but you will need to decide some parameters that have to be global
 >
 >The script will automate some the steps below, if you choose to run the script, jump straight to the [run configuration script](#configure-with-script)
 
+---
 ### Create Azure AD Service Principal
 
 To Authenticate to Azure Github requires credentials to be created and stored as a secret, to be consumed by the deployments. Create an appropriate service principal and assign permissions following this [guide](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure#:~:text=Create%20a%20service%20principal%20and%20add%20it%20to%20GitHub%20secret,-To%20use%20Azure&text=Open%20Azure%20Cloud%20Shell%20in%20the%20Azure%20portal%20or%20Azure%20CLI%20locally.&text=Create%20a%20new%20service%20principal,be%20assigned%20the%20Contributor%20role.&text=Copy%20the%20JSON%20object%20for%20your%20service%20principal.).
@@ -99,6 +100,7 @@ From within the Azure Portal you will need to register two Azure AD Applications
 * Frontend Client Id
 * Your Tenant Id
 
+---
 ### Amend Frontend Application Settings
 
 Configure the frontend application settings to match the settings you have configured. The file [appsettings.json](/frontend/wwwroot/appsettings.json) should be changed as per the below table, leave all other settings as is in the file:
@@ -111,13 +113,64 @@ Configure the frontend application settings to match the settings you have confi
 | key vault: ApiApplicationId | The backend application Id as registered in Azure Ad |
 | key vault: key vaultUrl | The key vault name you have chosen |
 
+---
 ### Amend Deployment Parameters
 
 To deploy the application stack, the [azuredeploy.parameters.json](/deployment/arm/parameters/azuredeploy.parameters.json) file needs to be configured with the appropriate settings. As per the steps completed previously.
 
 | Parameter | Use |
 |---|---|
+|backendName| The backend globally unique Azure web app name |
+|backendHostingPlanName| The App service plan naming that is hosting your backend app|
+|frontendName| The resource name for your frontend app|
+|frontendRepositoryUrl| This is the repo that is hosting the frontend app code|
+|frontendBranch| The name of the branch that should be deployed as code to your frontend app|
+|frontendRepositoryToken| Leave blank we will override this secret at deployment time|
+|deployDns| Choose whether to deploy Azure DNS to host the DNS zone for your app (highly recommended)|
+|configureCustomDns| Whether to configure a custom dns name for your frontend app, if set to false, you will get a randomly generated app name which you will then need to put into you Azure AD app registration|
+|customDnsZone| The zone name for your DNS hosting e.g. azureadmin.co.uk |
+|frontendCustomDnsName| The name of your frontend app dns e.g. passman|
+|dnsZoneSubscription| You may wish to host DNS in another subscription, enter the subscription that is hosting your DNS zone|
+|dnsZoneResourceGroup| The resource group hosting your DNS zone|
+|keyVaultName| The name of the key vault to use for the passman service|
+|userObjectId| The user object Id that will be set as an access policy to the key vault|
+|backendApplicationId| The backend application id that is configured with the access policy to the key vault|
 
+---
 
-and then save it as a secret within your repo as "AZURE_GITHUB_TOKEN"
+### Run the Configuration Script (only do this if you jumped to this step)
+
+The above steps have been automated by running [the ConfigureDeployment.ps1 script](/deployment/scripts/ConfigureDeployment.ps1)
+
+If you choose to run the script, run it at the root of your repo and provide the required parameters (review the parameters by viewing the script to the script.)
+You will be prompted to login to Azure CLI and Azure Powershell, ensure you use an account with permissions to register apps and configure permissions e.g. a global admin account. 
+
+The script will read from [the sample files](/deployment/samples/) amend them and output them to the correct locations. Overall the script will perform the following tasks:
+
+1) Amend the azuredeploy.parameters.json file
+2) Register the backend application in Azure AD and configure the appropriate settings
+3) Register the frontend application in Azure AD and configure the appropriate settings
+4) Output to screen the settings you will need to save as github secrets
+
+---
+
+### Configure Github secrets
+You now need to save github secret values that you have noted during setup, these secrets are used by the deployment pipelines.
+Start by creating a new environment in your github repo at github.com. If you chose to run the ConfigureDeployment.ps1 script these would have been output to screen. Create an environment named "Production"
+![github environment](/docs/images/github-environment.png)
+
+From within the production environment add the following secrets:
+| Secret Name | Value |
+|---|---|
+|APP_SETTINGS| These are the appsettings that are deployed to the backend application, these should remain secret and a sample of the value can be found [here](/deployment/samples/appsettingssecrets.json)|
+|AZURE_CREDENTIALS| The credentials output when registering a new service principal|
+|AZURE_GITHUB_TOKEN | The token you generated at the start of the setup guide |
+|AZURE_RG| The name of the resource group for deployment|
+|AZURE_SUBSCRIPTION| The subscription id you are deploying the service to |
+
+---
+
+### Deploy
+
+You are now ready to deploy the application. This is done via [the pipeline deploy-production.yml](/.github/workflows/deploy-production.yml). Push your changes to main and this will trigger the pipeline. If all settings are configured correctly the deployment will succeed and this will also generate a new workflow action that is generated automatically by the deployment of an Azure Static web app.
 
