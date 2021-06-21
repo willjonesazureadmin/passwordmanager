@@ -21,10 +21,10 @@
             "value": ""
         },
         "deployDns" : {
-            "value": "true"
+            "value": true
         },
         "configureCustomDns" : {
-            "value": "true"
+            "value": true
         },
         "customDnsZone": {
             "value": "azureadmin.co.uk"
