@@ -1,4 +1,4 @@
-# Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/azure-static-web-apps-witty-bush-0efccd803.yml/badge.svg)
+# Password Manager (passman) ![Badge](https://github.com/willjonesazureadmin/passwordmanager/actions/workflows/deploy-production.yml/badge.svg) 
 
 Password Manager *(passman)* built to store and retrieve passwords securely from an Azure Key vault...your own personal password manager.
 
