@@ -53,8 +53,15 @@ namespace keyvault.obo.Controllers
         [HttpGet("{SecretId}")]
         public async Task<IActionResult> GetAsync(string SecretId)
         {
-            var s = KeyVaultClient.GetSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, SecretId);           
-            return Ok(s);
+            try
+            {      
+                return Ok(KeyVaultClient.GetSecret((new OnBehalfOfCredential(_config["AzureAd:ClientId"],_config["AzureAd:ClientSecret"], await GetToken())), this.KeyvaultUrl, SecretId));
+            }
+            catch(Exception e)
+            {
+                return BadRequest("Something went wrong");
+            }
+
         }
 
         [HttpPost("{SecretId}/update")]
