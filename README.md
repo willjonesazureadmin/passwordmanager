@@ -17,7 +17,7 @@ Password Manager *(passman)* built to store and retrieve passwords securely from
 ## Goal of passman 
 The goal of passman is to develop my C# OOP with real world applicable use cases, whilst learning and demonstrating the capabilities of Azure services. passman demonstrates the following capabitlies:
 
-* Azure Active Directory User Authentication
+* Azure Active Directory Single Tenant User Authentication 
 * Azure Active Directory On-behalf of flow (OAuth)
 * Authenticated access to KeyVault via a browser
 * Azure Web App
