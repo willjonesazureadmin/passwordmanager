@@ -33,10 +33,10 @@
             "value": "passman"
         },
         "dnsZoneSubscription": {
-            "value": "484147e9-d24d-41b4-86a8-50819355deb7"
+            "value": "6ab96296-dd30-4be4-b219-bc999bab6ba9"
         },
         "dnsZoneResourceGroup": {
-            "value": "ss-dns-rg"
+            "value": "ESAZ-publicdns"
         },
         "keyVaultName": {
             "value": "azureadminpassmankv"
